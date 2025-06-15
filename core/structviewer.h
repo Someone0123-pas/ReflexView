@@ -1,8 +1,8 @@
 #ifndef STRUCTVIEWER_H
 #define STRUCTVIEWER_H
 
-#include "byteviewer.h"
 #include "algorithms.h"
+#include "byteviewer.h"
 
 class TilesetView : public RawView {
     logical_offset offset;
@@ -12,15 +12,14 @@ public:
     virtual logical_offset lower_bound() const override;
 };
 
-class PaletteView : public RawView {
+class PaletteView : public Byteviewer {
     logical_offset offset;
 
 public:
-    PaletteView(logical_offset offset) : RawView(), offset {offset} {}
+    PaletteView(logical_offset offset) : Byteviewer(), offset {offset} {}
     virtual logical_offset lower_bound() const override;
-    u16 at(unsigned index) const; // Get palettes with u16-indexing
+    u16 get_colour_at(unsigned index) const;  // Get palettes with u16-indexing
 };
-
 
 // Views RoomProps structs in gRoomProps
 class RoomPropsView : public Byteviewer {
@@ -49,11 +48,11 @@ public:
 
     unsigned get_width() const;
     unsigned get_palette_size() const;
-    //const std::vector<u16>& get_palette() const;
+    // const std::vector<u16>& get_palette() const;
     TilesetView get_tilesetview() const;
     void dump_tileset_4bpp(const std::string& filepath);
     void dump_tileset_png(const std::string& filepath);
     // const std::vector<u16>& get_tilemap() const;
 };
 
-#endif // STRUCTVIEWER_H
+#endif  // STRUCTVIEWER_H

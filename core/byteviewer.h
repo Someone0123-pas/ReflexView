@@ -31,6 +31,7 @@ public:
 // Default: Whole ROM
 struct RawView : public Byteviewer {
     RawView() : Byteviewer() {}
+    virtual ~RawView() = default;
     static const unsigned size;
     virtual logical_offset lower_bound() const override;
     u8 operator[](physical_offset) const;
