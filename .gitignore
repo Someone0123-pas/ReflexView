@@ -1,0 +1,10 @@
+build
+*.gba
+test*
+reflexview
+reflexview-debug
+.vscode
+.direnv
+.envrc
+!.vscode/tasks.json
+!.vscode/launch.json

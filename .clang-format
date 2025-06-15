@@ -1,0 +1,8 @@
+---
+BasedOnStyle: Google
+AccessModifierOffset: -4
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+IndentWidth: 4
+ColumnLimit: 100
+SpaceBeforeCpp11BracedList: true
