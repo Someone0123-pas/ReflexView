@@ -17,12 +17,14 @@
     devShells."${system}".default = pkgs.mkShell {
       QTPATH = qt;
       packages = (with pkgs; [
-	      gdb
 	      bashInteractive
+        cmake
+        ninja
+	      gdb
+	      clang-tools
+
 	      qtcreator
 	      libGL
-	      clang-tools
-        libpng
       ]) ++ [ qt ];
     };
   };
