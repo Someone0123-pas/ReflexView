@@ -3,7 +3,7 @@ build
 test*
 reflexview
 reflexview-debug
-.vscode
+.vscode/*
 .direnv
 .envrc
 !.vscode/tasks.json
