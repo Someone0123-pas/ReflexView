@@ -58,6 +58,6 @@ void LZSS::dump_4bpp(const std::string& filepath) {
 void LZSS::dump_png(const std::string& filepath, unsigned width) {
     if (!decompressed) decompress();
     std::ofstream outputfile {filepath, std::ios::binary};
-    auto [pngbuffer, pngsize] {png::from_4bpp(decompressed.get(), size, width)};
+    auto [pngbuffer, pngsize] {png::from_4bpp(decompressed.get(), size, width * 8)};
     outputfile.write(pngbuffer.get(), pngsize);
 }

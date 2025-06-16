@@ -20,6 +20,7 @@
 	      bashInteractive
         cmake
         ninja
+        zlib
 	      gdb
 	      clang-tools
 

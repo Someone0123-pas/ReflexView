@@ -13,7 +13,7 @@ std::string calculate(RawView = {});
 
 namespace png {
 std::pair<std::unique_ptr<const char[]>, unsigned> from_4bpp(const char buffer[], unsigned size,
-                                                             unsigned width);
+                                                             unsigned pixelwidth);
 }
 
 class LZSS {

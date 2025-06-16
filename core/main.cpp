@@ -15,11 +15,9 @@ int main(int argc, char* argv[]) {
 
     std::cout << UI->get_rom_filepath() << std::endl;
 
-#ifdef DEBUG
     BackgroundView bg {0};
     std::cout << std::hex << (unsigned)bg.get_tilesetview()[1] << std::endl;
     bg.dump_tileset_4bpp("test.4bpp.native");
-#endif
 
     return 0;
 }

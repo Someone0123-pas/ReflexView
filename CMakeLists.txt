@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(ReflexView VERSION 0.1.0 LANGUAGES C CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 
-set(CORESRCS
+add_subdirectory(lib/libspng-0.7.4)
+
+add_executable(reflexview)
+
+target_sources(reflexview PRIVATE
     core/main.cpp
     core/algorithms_lzss.cpp
     core/algorithms_png.cpp
@@ -12,11 +16,12 @@ set(CORESRCS
     core/ui_cli.cpp
 )
 
-add_executable(reflexview ${CORESRCS})
+target_link_libraries(reflexview PRIVATE spng_static)
+
 target_compile_options(reflexview PRIVATE
     -O3 -pedantic -Wall -Wextra
-    $<$<CONFIG:debug>: -O0>
 )
+
 target_compile_definitions(reflexview PRIVATE
     $<$<CONFIG:debug>: DEBUG>
 )
