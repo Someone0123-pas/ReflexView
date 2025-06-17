@@ -1,0 +1,14 @@
+Diagnostics:
+  ClangTidy:
+    Add: [
+      bugprone-*,
+      performance-*,
+      readability-*,
+      portability-*,
+      modernize-*,
+      cppcoreguidelines-*,
+      clang-analyzer-*
+    ]
+    Remove: [
+      cppcoreguidelines-avoid-c-arrays
+    ]

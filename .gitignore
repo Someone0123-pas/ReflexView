@@ -1,8 +1,10 @@
 build
 *.gba
 test*
-.vscode/*
 .direnv
 .envrc
+.vscode/*
 !.vscode/settings.json
 !.vscode/launch.json
+CMakeLists.txt.user
+.cache

@@ -23,5 +23,5 @@ target_compile_options(reflexview PRIVATE
 )
 
 target_compile_definitions(reflexview PRIVATE
-    $<$<CONFIG:debug>: DEBUG>
+    $<$<CONFIG:debug>:DEBUG>
 )

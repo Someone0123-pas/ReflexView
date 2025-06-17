@@ -1,6 +1,3 @@
 {
-    "C_Cpp.intelliSenseEngine": "disabled",
-    "clangd.arguments": [
-        "--compile-commands-dir=build/debug"
-    ]
+    "cmake.copyCompileCommands": "${workspaceRoot}/build/compile_commands.json",
 }
