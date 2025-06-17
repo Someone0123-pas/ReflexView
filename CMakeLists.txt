@@ -19,7 +19,7 @@ target_sources(reflexview PRIVATE
 target_link_libraries(reflexview PRIVATE spng_static)
 
 target_compile_options(reflexview PRIVATE
-    -O3 -pedantic -Wall -Wextra
+    -pedantic -Wall -Wextra
 )
 
 target_compile_definitions(reflexview PRIVATE

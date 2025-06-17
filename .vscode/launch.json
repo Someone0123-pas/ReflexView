@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "CMake Build and Launch",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/debug/reflexview",
             "args": ["katam.gba"],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": false,
@@ -26,7 +26,8 @@
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "CMake: build"
         }
 
     ]
