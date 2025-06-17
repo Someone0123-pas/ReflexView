@@ -1,17 +1,18 @@
 #ifndef UI_H
 #define UI_H
 
-#include <filesystem>
 #include <memory>
 #include <string>
+#include <utility>
 
 class UserInterface {
 protected:
     std::string filepath;
-    UserInterface(const std::string& filepath) : filepath {filepath} {}
+    UserInterface(std::string filepath) : filepath {std::move(filepath)} {}
 
 public:
-    virtual std::string get_rom_filepath() const = 0;
+    virtual ~UserInterface() = default;
+    virtual auto get_rom_filepath() const -> std::string = 0;
     virtual void error(const std::string&) const = 0;
 };
 
@@ -22,8 +23,9 @@ class CLI : public UserInterface {
     CLI(const std::string&);
 
 public:
+    ~CLI() override = default;
     static void set_ui(const std::string& filepath);
-    std::string get_rom_filepath() const override;
+    auto get_rom_filepath() const -> std::string override;
     void error(const std::string&) const override;
 };
 
@@ -32,7 +34,7 @@ class QT : public UserInterface {
 
 public:
     static void set_ui();
-    std::string get_rom_filepath() const override;
+    auto get_rom_filepath() const -> std::string override;
     void error(const std::string&) const override;
 };
 

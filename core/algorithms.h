@@ -5,15 +5,14 @@
 #include <string>
 
 #include "byteviewer.h"
-#include "constants.h"
 
 namespace sha1 {
-std::string calculate(RawView = {});
+auto calculate(const RawView& = {}) -> std::string;
 }
 
 namespace png {
-std::pair<std::unique_ptr<const char[]>, unsigned> from_4bpp(const char buffer[], unsigned size,
-                                                             unsigned pixelwidth);
+auto from_4bpp(const char buffer[], unsigned size, unsigned pixelwidth)
+    -> std::pair<std::unique_ptr<const char[]>, unsigned>;
 }
 
 class LZSS {

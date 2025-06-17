@@ -9,7 +9,7 @@ class TilesetView : public RawView {
 
 public:
     TilesetView(logical_offset offset) : RawView(), offset {offset} {}
-    virtual logical_offset lower_bound() const override;
+    auto lower_bound() const -> logical_offset override;
 };
 
 class PaletteView : public Byteviewer {
@@ -17,8 +17,10 @@ class PaletteView : public Byteviewer {
 
 public:
     PaletteView(logical_offset offset) : Byteviewer(), offset {offset} {}
-    virtual logical_offset lower_bound() const override;
-    u16 get_colour_at(unsigned index) const;  // Get palettes with u16-indexing
+    auto lower_bound() const -> logical_offset override;
+
+    // Get palettes with u16-indexing
+    auto get_colour_at(unsigned index) const -> u16;
 };
 
 // Views RoomProps structs in gRoomProps
@@ -30,7 +32,7 @@ public:
         if (index > 0x3d6) UI->error("Invalid RoomPropsView::Index");
     }
     static const unsigned size;
-    virtual logical_offset lower_bound() const override;
+    auto lower_bound() const -> logical_offset override;
 
     // TODO: Get palettedataIdx, etc.
 };
@@ -44,15 +46,14 @@ class BackgroundView : public Byteviewer {
 public:
     BackgroundView(unsigned index);
     static const unsigned size;
-    virtual logical_offset lower_bound() const override;
+    auto lower_bound() const -> logical_offset override;
 
-    unsigned get_width() const;
-    unsigned get_palette_size() const;
-    // const std::vector<u16>& get_palette() const;
-    TilesetView get_tilesetview() const;
+    auto get_width() const -> unsigned;
+    auto get_palette_size() const -> unsigned;
+    auto get_tilesetview() const -> TilesetView;
     void dump_tileset_4bpp(const std::string& filepath);
     void dump_tileset_png(const std::string& filepath);
-    // const std::vector<u16>& get_tilemap() const;
+    // TODO: get_palette() and get_tilemap()
 };
 
 #endif  // STRUCTVIEWER_H

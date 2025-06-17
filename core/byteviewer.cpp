@@ -6,7 +6,6 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include "algorithms.h"
 #include "constants.h"
@@ -36,16 +35,20 @@ void Byteviewer::load_rom() {
     else UI->error("Sha1 sum doesn't match known ROMs");
 }
 
-u8 Byteviewer::get_u8(logical_offset offset) const { return rom[offset.get_physical_offset()]; }
+auto Byteviewer::get_u8(logical_offset offset) const -> u8 {
+    return rom[offset.get_physical_offset()];
+}
 
-u16 Byteviewer::get_u16(logical_offset offset) const {
+auto Byteviewer::get_u16(logical_offset offset) const -> u16 {
     return get_u8(offset) | get_u8(offset + 1) << 8;
 }
 
-u32 Byteviewer::get_u32(logical_offset offset) const {
+auto Byteviewer::get_u32(logical_offset offset) const -> u32 {
     return get_u16(offset) | get_u16(offset + 2) << 16;
 }
 
 const unsigned RawView::size {ROM_SIZE};
-logical_offset RawView::lower_bound() const { return ROM_MAPADR; }
-u8 RawView::operator[](physical_offset offset) const { return get_u8(lower_bound() + offset); }
+auto RawView::lower_bound() const -> logical_offset { return ROM_MAPADR; }
+auto RawView::operator[](physical_offset offset) const -> u8 {
+    return get_u8(lower_bound() + offset);
+}

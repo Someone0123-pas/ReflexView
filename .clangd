@@ -3,12 +3,12 @@ Diagnostics:
     Add: [
       bugprone-*,
       performance-*,
-      readability-*,
       portability-*,
       modernize-*,
-      cppcoreguidelines-*,
       clang-analyzer-*
     ]
     Remove: [
-      cppcoreguidelines-avoid-c-arrays
+      modernize-avoid-c-arrays,
+      modernize-use-nodiscard,
+      bugprone-easily-swappable-parameters
     ]

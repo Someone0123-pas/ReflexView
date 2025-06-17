@@ -1,8 +1,10 @@
+extern "C" {
 #include <spng.h>
+}
 
 #include <memory>
 
 #include "algorithms.h"
 
-std::pair<std::unique_ptr<const char[]>, unsigned> png::from_4bpp(const char file[], unsigned size,
-                                                                  unsigned pixelwidth) {}
+auto png::from_4bpp(const char file[], unsigned size, unsigned pixelwidth)
+    -> std::pair<std::unique_ptr<const char[]>, unsigned> {}

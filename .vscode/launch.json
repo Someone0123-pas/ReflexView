@@ -4,31 +4,17 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": "CMake Build and Launch",
-            "type": "cppdbg",
+            "type": "gdb",
             "request": "launch",
-            "program": "${workspaceRoot}/build/debug/reflexview",
-            "args": ["katam.gba"],
-            "stopAtEntry": true,
+            "name": "CMake Build and Launch",
             "cwd": "${workspaceRoot}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ],
+            "target": "${workspaceRoot}/build/debug/reflexview",
+            "arguments": "katam.gba",
+            "stopAtEntry": true,
+            "valuesFormatting": "prettyPrinters",
             "preLaunchTask": "CMake: build"
         }
-
     ]
 }

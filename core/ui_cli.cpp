@@ -12,7 +12,7 @@ void CLI::set_ui(const std::string& filepath) {
     UI = std::unique_ptr<CLI>(new CLI {filepath});
 }
 
-std::string CLI::get_rom_filepath() const {
+auto CLI::get_rom_filepath() const -> std::string {
     if (!std::filesystem::exists(filepath)) error("File doesn't exist");
     return filepath;
 }

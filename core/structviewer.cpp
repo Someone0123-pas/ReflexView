@@ -3,13 +3,15 @@
 #include "algorithms.h"
 #include "byteviewer.h"
 
-logical_offset TilesetView::lower_bound() const { return offset; }
+auto TilesetView::lower_bound() const -> logical_offset { return offset; }
 
 const unsigned RoomPropsView::size {0x28};
-logical_offset RoomPropsView::lower_bound() const { return ROM_gROOMPROPS + index * size; }
+auto RoomPropsView::lower_bound() const -> logical_offset { return ROM_gROOMPROPS + index * size; }
 
 const unsigned BackgroundView::size {0x20};
-logical_offset BackgroundView::lower_bound() const { return get_u32(ROM_gBACKGROUNDS + index * 4); }
+auto BackgroundView::lower_bound() const -> logical_offset {
+    return get_u32(ROM_gBACKGROUNDS + index * 4);
+}
 
 BackgroundView::BackgroundView(unsigned index)
     : Byteviewer(),
@@ -20,13 +22,11 @@ BackgroundView::BackgroundView(unsigned index)
     // logical_offset palette_address {get_u32(lower_bound() + 0x10)};
 }
 
-unsigned BackgroundView::get_width() const { return get_u16(lower_bound()); }
+auto BackgroundView::get_width() const -> unsigned { return get_u16(lower_bound()); }
 
-unsigned BackgroundView::get_palette_size() const { return get_u16(lower_bound() + 0x16); }
+auto BackgroundView::get_palette_size() const -> unsigned { return get_u16(lower_bound() + 0x16); }
 
-TilesetView BackgroundView::get_tilesetview() const {
-    return tilesetview;
-}
+auto BackgroundView::get_tilesetview() const -> TilesetView { return tilesetview; }
 
 void BackgroundView::dump_tileset_4bpp(const std::string& filepath) {
     decompression.dump_4bpp(filepath);

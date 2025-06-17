@@ -19,7 +19,7 @@
  * (https://en.wikipedia.org/wiki/Wikipedia:Text_of_the_Creative_Commons_Attribution-ShareAlike_4.0_International_License#License),
  * and was modified for caluclating the sha1sum of a GBA ROM
  */
-std::string sha1::calculate(RawView rom) {
+auto sha1::calculate(const RawView& rom) -> std::string {
     u32 h0 {0x67452301};
     u32 h1 {0xefcdab89};
     u32 h2 {0x98badcfe};

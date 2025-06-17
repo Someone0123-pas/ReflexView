@@ -39,7 +39,7 @@ void LZSS::decompress() {
                 decomp_tiles[decomp_tiles_index] = decomp_tiles[decomp_tiles_index - disp];
             }
         } else {  // Data Byte
-            decomp_tiles[decomp_tiles_index++] = tiles[curindex++];
+            decomp_tiles[decomp_tiles_index++] = static_cast<char>(tiles[curindex++]);
         }
 
         --flagnum;
