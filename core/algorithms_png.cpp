@@ -6,5 +6,5 @@ extern "C" {
 
 #include "algorithms.h"
 
-auto png::from_4bpp(const char file[], unsigned size, unsigned pixelwidth)
+auto png::from_4bpp(const std::shared_ptr<const char[]>& src, unsigned size, unsigned pixelwidth)
     -> std::pair<std::unique_ptr<const char[]>, unsigned> {}

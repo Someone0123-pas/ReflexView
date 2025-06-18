@@ -4,16 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
-            "type": "gdb",
+            "type": "lldb",
             "request": "launch",
             "name": "CMake Build and Launch",
-            "cwd": "${workspaceRoot}",
-            "target": "${workspaceRoot}/build/debug/reflexview",
-            "arguments": "katam.gba",
-            "stopAtEntry": true,
-            "valuesFormatting": "prettyPrinters",
+            "program": "${workspaceFolder}/build/debug/reflexview",
+            "args": [ "katam.gba" ],
+            "cwd": "${workspaceFolder}",
+            "reverseDebugging": true,
+            "sourceLanguages": [ "c++" ],
+            "terminal": "console",
             "preLaunchTask": "CMake: build"
         }
     ]

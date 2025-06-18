@@ -6,6 +6,7 @@ Diagnostics:
       portability-*,
       modernize-*,
       clang-analyzer-*
+      cppcoreguidelines-init-variables
     ]
     Remove: [
       modernize-avoid-c-arrays,

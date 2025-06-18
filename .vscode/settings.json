@@ -1,3 +1,4 @@
 {
     "cmake.copyCompileCommands": "${workspaceRoot}/build/compile_commands.json",
+    "debug.internalConsoleOptions": "openOnSessionStart",
 }

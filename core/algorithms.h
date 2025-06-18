@@ -11,13 +11,13 @@ auto calculate(const RawView& = {}) -> std::string;
 }
 
 namespace png {
-auto from_4bpp(const char buffer[], unsigned size, unsigned pixelwidth)
+auto from_4bpp(const std::shared_ptr<const char[]>& src, unsigned size, unsigned pixelwidth)
     -> std::pair<std::unique_ptr<const char[]>, unsigned>;
 }
 
 class LZSS {
-    const RawView& tiles;
-    std::unique_ptr<const char[]> decompressed;
+    const RawView& compressed;
+    std::shared_ptr<const char[]> decompressed;
     unsigned size;
 
     void decompress();

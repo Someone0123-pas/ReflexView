@@ -1,4 +1,5 @@
 #include <array>
+#include <bit>
 #include <cassert>
 #include <iomanip>
 #include <iostream>
@@ -8,9 +9,6 @@
 #include "algorithms.h"
 #include "constants.h"
 
-#define CSL1(num) ((num) << 1 | (num) >> 31)
-#define CSL5(num) ((num) << 5 | (num) >> 27)
-#define CSL30(num) ((num) << 30 | (num) >> 2)
 #define FORMATHASH(hn) std::setw(8) << hn
 
 /*
@@ -45,7 +43,7 @@ auto sha1::calculate(const RawView& rom) -> std::string {
         }
 
         for (unsigned i {16}; i < 80; ++i)
-            w.at(i) = CSL1(w.at(i - 3) ^ w.at(i - 8) ^ w.at(i - 14) ^ w.at(i - 16));
+            w.at(i) = std::rotl(w.at(i - 3) ^ w.at(i - 8) ^ w.at(i - 14) ^ w.at(i - 16), 1);
 
         u32 a {h0};
         u32 b {h1};
@@ -69,10 +67,10 @@ auto sha1::calculate(const RawView& rom) -> std::string {
                 k = 0xca62c1d6;
             }
 
-            tmp = (CSL5(a)) + f + e + k + w[i];
+            tmp = (std::rotl(a, 5)) + f + e + k + w[i];
             e = d;
             d = c;
-            c = CSL30(b);
+            c = std::rotl(b, 30);
             b = a;
             a = tmp;
         }
@@ -90,7 +88,4 @@ auto sha1::calculate(const RawView& rom) -> std::string {
     return digest.str();
 }
 
-#undef CSL1
-#undef CSL5
-#undef CSL30
 #undef FORMATHASH
