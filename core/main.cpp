@@ -13,9 +13,8 @@ auto main(int argc, char* argv[]) -> int {
 
     std::cout << UI->get_rom_filepath() << '\n';
 
-    BackgroundView bg {0};
-    std::cout << std::hex << (unsigned)bg.get_tilesetview()[1] << '\n';
-    bg.dump_tileset_4bpp("test.4bpp.native");
+    BackgroundView bg {0xd};
+    bg.dump_tileset_png("test.native.4bpp.png");
 
     return 0;
 }

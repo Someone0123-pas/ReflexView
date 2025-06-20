@@ -11,10 +11,12 @@ auto calculate(const RawView& = {}) -> std::string;
 }
 
 namespace png {
-auto from_4bpp(const std::shared_ptr<const char[]>& src, unsigned size, unsigned pixelwidth)
-    -> std::pair<std::unique_ptr<const char[]>, unsigned>;
+auto from_4bpp_tileset(const std::shared_ptr<const char[]>& src, unsigned tilewidth,
+                       unsigned tileheight)
+    -> std::pair<std::unique_ptr<const char[]>, unsigned long>;
 }
 
+// Should only be used as component in Byteviewers that contain RawViews to LZSS-compressed buffers
 class LZSS {
     const RawView& compressed;
     std::shared_ptr<const char[]> decompressed;
@@ -25,7 +27,7 @@ class LZSS {
 public:
     LZSS(const RawView&);
     void dump_4bpp(const std::string& filepath);
-    void dump_png(const std::string& filepath, unsigned width);
+    void dump_png(const std::string& filepath, unsigned tilewidth, unsigned tileheight);
 };
 
 // Run-Length

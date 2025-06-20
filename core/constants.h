@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-#define ROM_SIZE static_cast<long>(16 * 1024 * 1024)  // 16 MB
+#define ROM_SIZE (16 * 1024 * 1024)  // 16 MB
 #define ROM_MAPADR 0x08000000
 #define ROM_gROOMPROPS 0x089331AC
 #define ROM_gBACKGROUNDS 0x08D64A24

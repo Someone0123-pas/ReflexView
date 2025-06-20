@@ -11,5 +11,6 @@ Diagnostics:
     Remove: [
       modernize-avoid-c-arrays,
       modernize-use-nodiscard,
-      bugprone-easily-swappable-parameters
+      bugprone-easily-swappable-parameters,
+      bugprone-implicit-widening-of-multiplication-result
     ]

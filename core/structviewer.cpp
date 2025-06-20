@@ -23,15 +23,14 @@ BackgroundView::BackgroundView(unsigned index)
 }
 
 auto BackgroundView::get_width() const -> unsigned { return get_u16(lower_bound()); }
+auto BackgroundView::get_height() const -> unsigned { return get_u16(lower_bound() + 2); }
 
 auto BackgroundView::get_palette_size() const -> unsigned { return get_u16(lower_bound() + 0x16); }
-
-auto BackgroundView::get_tilesetview() const -> TilesetView { return tilesetview; }
 
 void BackgroundView::dump_tileset_4bpp(const std::string& filepath) {
     decompression.dump_4bpp(filepath);
 }
 
 void BackgroundView::dump_tileset_png(const std::string& filepath) {
-    decompression.dump_png(filepath, get_width());
+    decompression.dump_png(filepath, get_width(), get_height());
 }

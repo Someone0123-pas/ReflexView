@@ -49,8 +49,8 @@ public:
     auto lower_bound() const -> logical_offset override;
 
     auto get_width() const -> unsigned;
+    auto get_height() const -> unsigned;
     auto get_palette_size() const -> unsigned;
-    auto get_tilesetview() const -> TilesetView;
     void dump_tileset_4bpp(const std::string& filepath);
     void dump_tileset_png(const std::string& filepath);
     // TODO: get_palette() and get_tilemap()
