@@ -54,7 +54,7 @@ void static encode_4bpp_tileset(const std::shared_ptr<const char[]>& src, unsign
 
 auto png::from_4bpp_tileset_gray(const std::shared_ptr<const char[]>& src, unsigned tilewidth,
                                  unsigned tileheight, bool inversed)
-    -> std::pair<std::unique_ptr<const char[]>, unsigned long> {
+    -> std::pair<std::unique_ptr<const char[]>, const long> {
     spng_ctx* ctx {spng_ctx_new(SPNG_CTX_ENCODER)};
     status = spng_set_option(ctx, SPNG_ENCODE_TO_BUFFER, 1);
     CHECK_STATUS;
@@ -82,7 +82,8 @@ auto png::from_4bpp_tileset_gray(const std::shared_ptr<const char[]>& src, unsig
 }
 
 auto png::from_4bpp_tileset(const std::shared_ptr<const char[]>& src, unsigned tilewidth,
-                            unsigned tileheight, const PaletteView& palette)
-    -> std::pair<std::unique_ptr<const char[]>, unsigned long> {
+                            unsigned tileheight, const std::vector<u8>& pngpalette)
+    -> std::pair<std::unique_ptr<const char[]>, const long> {
+    // TODO
     return {};
 }

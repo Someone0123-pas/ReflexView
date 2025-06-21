@@ -3,9 +3,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "byteviewer.h"
-class PaletteView;
 
 namespace sha1 {
 auto calculate(const RawView& = {}) -> std::string;
@@ -16,30 +16,18 @@ namespace png {
 // inversed
 auto from_4bpp_tileset_gray(const std::shared_ptr<const char[]>& src, unsigned tilewidth,
                             unsigned tileheight, bool inversed)
-    -> std::pair<std::unique_ptr<const char[]>, unsigned long>;
+    -> std::pair<std::unique_ptr<const char[]>, const long>;
 
 auto from_4bpp_tileset(const std::shared_ptr<const char[]>& src, unsigned tilewidth,
-                       unsigned tileheight, const PaletteView& palette)
-    -> std::pair<std::unique_ptr<const char[]>, unsigned long>;
+                       unsigned tileheight, const std::vector<u8>& pngpalette)
+    -> std::pair<std::unique_ptr<const char[]>, const long>;
 }  // namespace png
 
-// Should only be used as component in Byteviewers that contain RawViews to LZSS-compressed buffers
-class LZSS {
-    const RawView& compressed;
-    std::shared_ptr<const char[]> decompressed;
-    unsigned size;
-
-    void decompress();
-
-public:
-    LZSS(const RawView&);
-    void dump_4bpp(const std::string& filepath);
-    void dump_png_gray(const std::string& filepath, unsigned tilewidth, unsigned tileheight,
-                       bool inversed);
-    void dump_png(const std::string& filepath, unsigned tilewidth, unsigned tileheight, const PaletteView& palette);
-};
+namespace lzss {
+auto decompress(const RawView&) -> std::pair<std::unique_ptr<const char[]>, const long>;
+}
 
 // Run-Length
-class RL {};
+namespace RL {};
 
 #endif  // ALGORITHMS_H

@@ -35,7 +35,7 @@ class RoomPropsView : public Byteviewer {
 
 public:
     RoomPropsView(unsigned index) : Byteviewer(), index {index} {
-        if (index > 0x3d6) UI->error("Invalid RoomPropsView::Index");
+        if (index > 0x3d6) UI->error("Invalid RoomPropsView::index");
     }
     static const unsigned size;
     auto baseadr() const -> logical_offset override;
@@ -46,18 +46,22 @@ public:
 // Views dereferenced LevelInfo_1A0 structs in gBackgrounds
 class BackgroundView : public Byteviewer {
     const unsigned index;
-    const TilesetView tilesetview;
-    LZSS decompression;
+
+    auto get_tilesetview() const -> const TilesetView;
 
 public:
-    BackgroundView(unsigned index);
+    BackgroundView(unsigned index) : Byteviewer(), index {index} {
+        if (index > 0x1e) {
+            UI->error("Invalid BackgroundView::index");
+        }
+    }
     static const unsigned size;
     auto baseadr() const -> logical_offset override;
 
     auto get_width() const -> unsigned;
     auto get_height() const -> unsigned;
     void dump_tileset_4bpp(const std::string& filepath);
-    void dump_tileset_png_gray(const std::string& filepath, bool inversed);
+    void dump_png_gray(const std::string& filepath, bool inversed);
     void dump_png(const std::string& filepath);
 };
 
