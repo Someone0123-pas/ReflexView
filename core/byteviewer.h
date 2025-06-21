@@ -18,7 +18,7 @@ protected:
 
 public:
     virtual ~Byteviewer() = default;
-    virtual auto lower_bound() const -> logical_offset = 0;
+    virtual auto baseadr() const -> logical_offset = 0;
     virtual auto get_u8(logical_offset) const -> u8;
     virtual auto get_u16(logical_offset) const -> u16;
     virtual auto get_u32(logical_offset) const -> u32;
@@ -31,7 +31,7 @@ struct RawView : public Byteviewer {
     ~RawView() override = default;
 
     static const unsigned size;
-    auto lower_bound() const -> logical_offset override;
+    auto baseadr() const -> logical_offset override;
     auto operator[](physical_offset) const -> u8;
 };
 

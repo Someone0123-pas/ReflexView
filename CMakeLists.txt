@@ -22,7 +22,7 @@ target_link_libraries(reflexview PRIVATE spng_static)
 
 target_compile_options(reflexview PRIVATE
     $<$<CONFIG:debug>:-O1>
-    -pedantic -Wall -Wextra
+    -Wall -Wextra
 )
 
 target_compile_definitions(reflexview PRIVATE

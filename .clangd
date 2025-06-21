@@ -1,3 +1,8 @@
+CompileFlags:
+  Add: [
+    -Wno-gnu-statement-expression-from-macro-expansion
+  ]
+
 Diagnostics:
   ClangTidy:
     Add: [

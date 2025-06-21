@@ -48,7 +48,7 @@ auto Byteviewer::get_u32(logical_offset offset) const -> u32 {
 }
 
 const unsigned RawView::size {ROM_SIZE};
-auto RawView::lower_bound() const -> logical_offset { return ROM_MAPADR; }
+auto RawView::baseadr() const -> logical_offset { return ROM_MAPADR; }
 auto RawView::operator[](physical_offset offset) const -> u8 {
-    return get_u8(lower_bound() + offset);
+    return get_u8(baseadr() + offset);
 }

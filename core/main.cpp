@@ -13,8 +13,8 @@ auto main(int argc, char* argv[]) -> int {
 
     std::cout << UI->get_rom_filepath() << '\n';
 
-    BackgroundView bg {0xd};
-    bg.dump_tileset_png("test.native.4bpp.png");
+    BackgroundView bg {0x1a};
+    bg.dump_tileset_png_gray("test.native.4bpp.png", false);
 
     return 0;
 }

@@ -5,6 +5,7 @@
 
 #include "algorithms.h"
 #include "byteviewer.h"
+#include "structviewer.h"
 #include "ui.h"
 
 LZSS::LZSS(const RawView& tiles) : compressed {tiles}, size {0} {}
@@ -57,9 +58,16 @@ void LZSS::dump_4bpp(const std::string& filepath) {
     outputfile.write(decompressed.get(), size);
 }
 
-void LZSS::dump_png(const std::string& filepath, unsigned tilewidth, unsigned tileheight) {
+void LZSS::dump_png_gray(const std::string& filepath, unsigned tilewidth, unsigned tileheight, bool inversed) {
     if (!decompressed) decompress();
     std::ofstream outputfile {filepath, std::ios::binary};
-    auto [pngbuffer, pngsize] {png::from_4bpp_tileset(decompressed, tilewidth, tileheight)};
+    auto [pngbuffer, pngsize] {png::from_4bpp_tileset_gray(decompressed, tilewidth, tileheight, inversed)};
+    outputfile.write(pngbuffer.get(), static_cast<long>(pngsize));
+}
+
+void LZSS::dump_png(const std::string& filepath, unsigned tilewidth, unsigned tileheight, const PaletteView& palette) {
+    if (!decompressed) decompress();
+    std::ofstream outputfile {filepath, std::ios::binary};
+    auto [pngbuffer, pngsize] {png::from_4bpp_tileset(decompressed, tilewidth, tileheight, palette)};
     outputfile.write(pngbuffer.get(), static_cast<long>(pngsize));
 }
