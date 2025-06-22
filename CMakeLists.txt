@@ -11,8 +11,12 @@ add_executable(reflexview)
 target_sources(reflexview PRIVATE
     core/main.cpp
     core/byteviewer.cpp
-    core/structviewer.cpp
     core/ui_cli.cpp
+
+    core/structviewer/background.cpp
+    core/structviewer/palette.cpp
+    core/structviewer/roomprops.cpp
+    core/structviewer/tileset.cpp
 
     core/algorithms/gbapng.cpp
     core/algorithms/lzss.cpp

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "constants.h"
+#include "types.h"
 
 namespace png {
 // To byte match a grayscale PNG with YamaArashi's gbagfx tool, the grayscale palette must be

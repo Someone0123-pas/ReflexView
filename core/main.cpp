@@ -1,7 +1,6 @@
 #include <iostream>
-#include <memory>
 
-#include "structviewer.h"
+#include "structviewer/background.h"
 #include "ui.h"
 
 auto main(int argc, char* argv[]) -> int {

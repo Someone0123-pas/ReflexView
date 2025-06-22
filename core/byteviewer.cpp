@@ -8,7 +8,7 @@
 #include <string>
 
 #include "algorithms/sha1.h"
-#include "constants.h"
+#include "types.h"
 #include "ui.h"
 
 std::unique_ptr<const char[]> Byteviewer::rom;

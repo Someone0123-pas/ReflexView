@@ -7,10 +7,6 @@
 
 constexpr unsigned ROM_SIZE {16 * 1024 * 1024};  // 16 MB
 constexpr unsigned ROM_MAPADR {0x08000000};
-constexpr unsigned ROM_gROOMPROPS {0x089331AC};
-constexpr unsigned ROM_gBACKGROUNDS {0x08D64A24};
-
-constexpr char SHA1SUM_U[] {"274b102b6d940f46861a92b4e65f89a51815c12c"};
 
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;

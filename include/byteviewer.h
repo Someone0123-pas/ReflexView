@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "constants.h"
+#include "types.h"
 
 // Pseudo-Singleton base class:
 // When viewers are instantiated, they all refer to the same rom, but different parts of it

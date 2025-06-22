@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 
-#include "constants.h"
+#include "types.h"
 
 #define FORMATHASH(hn) std::setw(8) << hn
 
