@@ -14,7 +14,7 @@ auto main(int argc, char* argv[]) -> int {
     std::cout << UI->get_rom_filepath() << '\n';
 
     BackgroundView bg {0x1a};
-    bg.dump_png_gray("test.native.4bpp.png", false);
+    bg.dump_png_gray("test.native.4bpp.png", true);
 
     return 0;
 }

@@ -3,12 +3,11 @@
 
 #include <vector>
 
-#include "algorithms.h"
 #include "byteviewer.h"
 #include "constants.h"
 
 class TilesetView : public RawView {
-    logical_offset offset;
+    const logical_offset offset;
 
 public:
     TilesetView(logical_offset offset) : RawView(), offset {offset} {}
@@ -17,16 +16,15 @@ public:
 
 class PaletteView : public Byteviewer {
     const logical_offset offset;
-    const u16 size;
+    const unsigned size;
+    const unsigned startnum;  // Starting index (0 - 15), where palette is loaded into
 
 public:
-    PaletteView(logical_offset offset, u16 size) : Byteviewer(), offset {offset}, size {size} {}
+    PaletteView(logical_offset offset, unsigned size, unsigned startnum)
+        : Byteviewer(), offset {offset}, size {size}, startnum {startnum} {}
     auto baseadr() const -> logical_offset override;
 
-    auto get_png_plte() const -> std::vector<u8>;
-
-    // Get palettes with u16-indexing
-    // auto get_colour_at(unsigned index) const -> u16;
+    auto get_spng_plte() const -> const std::vector<u8>;
 };
 
 // Views RoomProps structs in gRoomProps
@@ -48,12 +46,11 @@ class BackgroundView : public Byteviewer {
     const unsigned index;
 
     auto get_tilesetview() const -> const TilesetView;
+    auto get_paletteview() const -> const PaletteView;
 
 public:
     BackgroundView(unsigned index) : Byteviewer(), index {index} {
-        if (index > 0x1e) {
-            UI->error("Invalid BackgroundView::index");
-        }
+        if (index > 0x1e) { UI->error("Invalid BackgroundView::index"); }
     }
     static const unsigned size;
     auto baseadr() const -> logical_offset override;

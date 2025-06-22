@@ -1,8 +1,9 @@
+#include "algorithms/lzss.h"
+
 #include <memory>
 #include <string>
 #include <utility>
 
-#include "algorithms.h"
 #include "byteviewer.h"
 #include "ui.h"
 

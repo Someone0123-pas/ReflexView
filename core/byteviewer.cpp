@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include "algorithms.h"
+#include "algorithms/sha1.h"
 #include "constants.h"
 #include "ui.h"
 

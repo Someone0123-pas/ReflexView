@@ -1,7 +1,11 @@
 CompileFlags:
   Add: [
+    -Wall,
+    -Wextra,
     -Wno-gnu-statement-expression-from-macro-expansion
   ]
+
+---
 
 Diagnostics:
   ClangTidy:
@@ -19,3 +23,11 @@ Diagnostics:
       bugprone-easily-swappable-parameters,
       bugprone-implicit-widening-of-multiplication-result
     ]
+
+---
+
+If:
+  PathMatch: lib/*
+Diagnostics:
+  ClangTidy:
+    Remove: "*"

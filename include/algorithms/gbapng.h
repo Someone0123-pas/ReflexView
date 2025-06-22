@@ -1,15 +1,10 @@
-#ifndef ALGORITHMS_H
-#define ALGORITHMS_H
+#ifndef GBAPNG_H
+#define GBAPNG_H
 
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "byteviewer.h"
-
-namespace sha1 {
-auto calculate(const RawView& = {}) -> std::string;
-}
+#include "constants.h"
 
 namespace png {
 // To byte match a grayscale PNG with YamaArashi's gbagfx tool, the grayscale palette must be
@@ -23,11 +18,4 @@ auto from_4bpp_tileset(const std::shared_ptr<const char[]>& src, unsigned tilewi
     -> std::pair<std::unique_ptr<const char[]>, const long>;
 }  // namespace png
 
-namespace lzss {
-auto decompress(const RawView&) -> std::pair<std::unique_ptr<const char[]>, const long>;
-}
-
-// Run-Length
-namespace RL {};
-
-#endif  // ALGORITHMS_H
+#endif  // GBAPNG_H

@@ -1,3 +1,5 @@
+#include "algorithms/sha1.h"
+
 #include <array>
 #include <bit>
 #include <cassert>
@@ -6,7 +8,6 @@
 #include <sstream>
 #include <string>
 
-#include "algorithms.h"
 #include "constants.h"
 
 #define FORMATHASH(hn) std::setw(8) << hn
