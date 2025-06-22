@@ -31,7 +31,7 @@ void BackgroundView::dump_tileset_4bpp(const std::string& filepath) {
 void BackgroundView::dump_png_gray(const std::string& filepath, bool inversed) {
     auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
     auto [pngbuffer, pngbuffer_size] {
-        png::from_4bpp_tileset_gray(std::move(tileset), get_width(), get_height(), inversed)};
+        png::from_4bpp_tiled_image_gray(std::move(tileset), get_width(), get_height(), inversed)};
     std::ofstream {filepath, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 }
 
