@@ -17,6 +17,7 @@ target_sources(reflexview PRIVATE
     core/structviewer/palette.cpp
     core/structviewer/roomprops.cpp
     core/structviewer/tileset.cpp
+    core/structviewer/tilemap.cpp
 
     core/algorithms/gbapng.cpp
     core/algorithms/lzss.cpp

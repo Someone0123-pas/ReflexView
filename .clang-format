@@ -1,7 +1,8 @@
 BasedOnStyle: Google
 AccessModifierOffset: -4
 AllowShortBlocksOnASingleLine: Always
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortIfStatementsOnASingleLine: Never
 IndentWidth: 4
-ColumnLimit: 100
+ColumnLimit: 110
 SpaceBeforeCpp11BracedList: true
+AlignAfterOpenBracket: BlockIndent

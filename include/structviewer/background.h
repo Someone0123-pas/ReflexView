@@ -4,8 +4,9 @@
 #include <string>
 
 #include "byteviewer.h"
-#include "palette.h"
-#include "tileset.h"
+#include "structviewer/palette.h"
+#include "structviewer/tilemap.h"
+#include "structviewer/tileset.h"
 #include "types.h"
 
 constexpr unsigned ROM_gBACKGROUNDS {0x08D64A24};
@@ -16,10 +17,13 @@ class BackgroundView : public Byteviewer {
 
     auto get_tilesetview() const -> const TilesetView;
     auto get_paletteview() const -> const PaletteView;
+    auto get_tilemapview() const -> const TilemapView;
 
 public:
     BackgroundView(unsigned index) : Byteviewer(), index {index} {
-        if (index > 0x1e) { UI->error("Invalid BackgroundView::index"); }
+        if (index > 0x1e) {
+            UI->error("Invalid BackgroundView::index");
+        }
     }
     static const unsigned size;
     auto baseadr() const -> logical_offset override;

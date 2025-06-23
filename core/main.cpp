@@ -14,6 +14,7 @@ auto main(int argc, char* argv[]) -> int {
 
     BackgroundView bg {0x1a};
     bg.dump_png_gray("test.native.4bpp.png", true);
+    bg.dump_png("test.colour.png");
 
     return 0;
 }
