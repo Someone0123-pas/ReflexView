@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory(lib/libspng-0.7.4)
+add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
 
 add_executable(reflexview)
 
@@ -24,7 +24,7 @@ target_sources(reflexview PRIVATE
     core/algorithms/sha1.cpp
 )
 
-target_include_directories(reflexview PRIVATE include)
+target_include_directories(reflexview PUBLIC include)
 
 target_link_libraries(reflexview PRIVATE spng_static)
 

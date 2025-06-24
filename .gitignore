@@ -3,8 +3,6 @@ build
 test*
 .direnv
 .envrc
-.vscode/*
-!.vscode/settings.json
-!.vscode/launch.json
+.vscode
 CMakeLists.txt.user
 .cache

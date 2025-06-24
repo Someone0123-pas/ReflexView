@@ -27,11 +27,14 @@ static constexpr unsigned TILE_PIXELWIDTH {8};
 static constexpr unsigned TILE_PIXELHEIGHT {8};
 static constexpr unsigned TILE_BYTEWIDTH_4BPP {BITDEPTH_4BPP * TILE_PIXELWIDTH / 8};
 
-const auto translate_to_4bpp_tiled_image_index {[](unsigned y, unsigned x, unsigned max_x) -> unsigned {
-    return (x % TILE_BYTEWIDTH_4BPP) + (x / TILE_BYTEWIDTH_4BPP) * TILE_BYTEWIDTH_4BPP * TILE_PIXELHEIGHT +
-           (y % TILE_PIXELHEIGHT) * TILE_BYTEWIDTH_4BPP +
-           (y / TILE_PIXELHEIGHT) * max_x * TILE_PIXELHEIGHT;
-}};
+static constexpr auto translate_to_4bpp_tiled_image_index {
+    [](unsigned y, unsigned x, unsigned max_x) -> unsigned {
+        return (x % TILE_BYTEWIDTH_4BPP) +
+               (x / TILE_BYTEWIDTH_4BPP) * TILE_BYTEWIDTH_4BPP * TILE_PIXELHEIGHT +
+               (y % TILE_PIXELHEIGHT) * TILE_BYTEWIDTH_4BPP +
+               (y / TILE_PIXELHEIGHT) * max_x * TILE_PIXELHEIGHT;
+    }
+};
 
 /* Helper function to encode a png progressively by giving LambdaIntoPngrow two indices with the
    following specification:
@@ -90,11 +93,11 @@ auto png::from_4bpp_tiled_image_gray(
         ctx, tileheight * TILE_PIXELHEIGHT, tilewidth * TILE_BYTEWIDTH_4BPP,
         [&tiled_image, &tilewidth,
          &inversed](const unsigned rowindex, const unsigned columnbyteindex) -> unsigned char {
-            unsigned char srcbyte {static_cast<unsigned char>(
-                tiled_image[translate_to_4bpp_tiled_image_index(rowindex, columnbyteindex, tilewidth * TILE_BYTEWIDTH_4BPP)]
-            )};
+            unsigned char srcbyte {static_cast<unsigned char>(tiled_image[translate_to_4bpp_tiled_image_index(
+                rowindex, columnbyteindex, tilewidth * TILE_BYTEWIDTH_4BPP
+            )])};
             if (inversed) {
-                srcbyte = static_cast<unsigned char>(~srcbyte);
+                srcbyte = 0xff - srcbyte;
             }
 
             return std::rotl(srcbyte, 4);
@@ -143,8 +146,11 @@ auto png::from_4bpp_tiled_image(
     encode_png_by_row(
         ctx, tileheight * TILE_PIXELHEIGHT, tilewidth * TILE_PIXELWIDTH,
         [&tiled_image, &tilewidth, &tilemap](unsigned rowindex, unsigned columnbyteindex) -> unsigned char {
-            unsigned srcindex {translate_to_4bpp_tiled_image_index(rowindex, columnbyteindex / 2, tilewidth * TILE_BYTEWIDTH_4BPP)};
-            return ((static_cast<unsigned char>(tiled_image[srcindex]) >> ((columnbyteindex % 2) * 4)) & 0x0f) |
+            unsigned srcindex {translate_to_4bpp_tiled_image_index(
+                rowindex, columnbyteindex / 2, tilewidth * TILE_BYTEWIDTH_4BPP
+            )};
+            return ((static_cast<unsigned char>(tiled_image[srcindex]) >> ((columnbyteindex % 2) * 4)) & 0x0f
+                   ) |
                    tilemap.get_tile_palette_shifted(srcindex / (TILE_PIXELHEIGHT * TILE_BYTEWIDTH_4BPP)) << 4;
         }
     );

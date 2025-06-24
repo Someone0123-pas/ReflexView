@@ -1,4 +1,8 @@
 {
     "cmake.copyCompileCommands": "${workspaceRoot}/build/compile_commands.json",
     "debug.internalConsoleOptions": "openOnSessionStart",
+    "qt-core.additionalQtPaths": [
+        "/nix/store/pylww1b5iwxj5syl4qnf5phrnn6kngi0-qt-6.9.0/bin/qtpaths6",
+    ],
+    "cmake.options.statusBarVisibility": "visible",
 }

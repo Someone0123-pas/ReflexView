@@ -2,7 +2,6 @@
 #define TILEMAP_H
 
 #include <memory>
-#include <vector>
 
 #include "byteviewer.h"
 #include "structviewer/tileset.h"

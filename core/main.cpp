@@ -10,10 +10,8 @@ auto main(int argc, char* argv[]) -> int {
     }
     CLI::set_ui(argv[1]);
 
-    std::cout << UI->get_rom_filepath() << '\n';
-
-    BackgroundView bg {0x1a};
-    bg.dump_png_gray("test.native.4bpp.png", true);
+    BackgroundView bg {0x0};
+    bg.dump_png_gray("test.gray.png", true);
     bg.dump_png("test.colour.png");
 
     return 0;
