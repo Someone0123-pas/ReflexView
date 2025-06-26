@@ -4,5 +4,7 @@ test*
 .direnv
 .envrc
 .vscode
+!.vscode/launch.json
+!.vscode/settings.json
 CMakeLists.txt.user
 .cache

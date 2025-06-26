@@ -68,7 +68,7 @@ auto sha1::calculate(const RawView& rom) -> std::string {
                 k = 0xca62c1d6;
             }
 
-            tmp = (std::rotl(a, 5)) + f + e + k + w[i];
+            tmp = (std::rotl(a, 5)) + f + e + k + w.at(i);
             e = d;
             d = c;
             c = std::rotl(b, 30);

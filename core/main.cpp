@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "qt/init.h"
 #include "structviewer/background.h"
 #include "ui.h"
 
@@ -14,5 +15,5 @@ auto main(int argc, char* argv[]) -> int {
     bg.dump_png_gray("test.gray.png", true);
     bg.dump_png("test.colour.png");
 
-    return 0;
+    return initialise(argc, argv);
 }

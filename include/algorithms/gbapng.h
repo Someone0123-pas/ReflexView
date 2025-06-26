@@ -13,11 +13,10 @@ namespace png {
 // To byte match a grayscale PNG with YamaArashi's gbagfx tool, the grayscale palette must be
 // inversed
 auto from_4bpp_tiled_image_gray(
-    const std::shared_ptr<const char[]>& tiled_image, unsigned tilewidth, unsigned tileheight,
-    bool inversed
+    const char tiled_image[], unsigned tilewidth, unsigned tileheight, bool inversed
 ) -> std::pair<std::unique_ptr<const char[]>, const long>;
 
-auto from_4bpp_tiled_image(const std::shared_ptr<const char[]>& tiled_image, unsigned tilewidth, unsigned tileheight, const PaletteView&, const TilemapView&)
+auto from_4bpp_tiled_image(const char tiled_image[], unsigned tilewidth, unsigned tileheight, const PaletteView&, const TilemapView&)
     -> std::pair<std::unique_ptr<const char[]>, const long>;
 }  // namespace png
 

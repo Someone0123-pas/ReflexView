@@ -59,7 +59,8 @@ void static encode_png_by_row(
     std::vector<unsigned char> pngrow(pngrow_size);
     for (unsigned rowindex {}; rowindex < image_pixelheight; ++rowindex) {
         for (unsigned columnbyteindex {}; columnbyteindex < pngrow_size; ++columnbyteindex) {
-            pngrow.at(columnbyteindex) = get_src_byte(rowindex, columnbyteindex);
+            pngrow.at(columnbyteindex) =
+                std::forward<LambdaGetSrcByte>(get_src_byte)(rowindex, columnbyteindex);
         }
         status = spng_encode_row(ctx, pngrow.data(), pngrow.size());
     }
@@ -71,7 +72,7 @@ void static encode_png_by_row(
 }
 
 auto png::from_4bpp_tiled_image_gray(
-    const std::shared_ptr<const char[]>& tiled_image, unsigned tilewidth, unsigned tileheight, bool inversed
+    const char tiled_image[], unsigned tilewidth, unsigned tileheight, bool inversed
 ) -> std::pair<std::unique_ptr<const char[]>, const long> {
     spng_ctx* ctx {spng_ctx_new(SPNG_CTX_ENCODER)};
     status = spng_set_option(ctx, SPNG_ENCODE_TO_BUFFER, 1);
@@ -115,8 +116,8 @@ auto png::from_4bpp_tiled_image_gray(
 }
 
 auto png::from_4bpp_tiled_image(
-    const std::shared_ptr<const char[]>& tiled_image, unsigned tilewidth, unsigned tileheight,
-    const PaletteView& palette, const TilemapView& tilemap
+    const char tiled_image[], unsigned tilewidth, unsigned tileheight, const PaletteView& palette,
+    const TilemapView& tilemap
 ) -> std::pair<std::unique_ptr<const char[]>, const long> {
     const std::vector<u8>& pngpalette {palette.get_spng_plte()};
 
@@ -138,7 +139,7 @@ auto png::from_4bpp_tiled_image(
 
     assert(pngpalette.size() / 4 < 256);
     spng_plte plte {.n_entries = static_cast<uint32_t>(pngpalette.size() / 4), .entries = {}};
-    std::memcpy(plte.entries, pngpalette.data(), pngpalette.size());
+    std::memcpy(static_cast<spng_plte_entry*>(plte.entries), pngpalette.data(), pngpalette.size());
     status = spng_set_plte(ctx, &plte);
     CHECK_STATUS;
 

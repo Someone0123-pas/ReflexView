@@ -16,6 +16,7 @@
   in {
     devShells."${system}".default = pkgs.mkShell {
       QTPATH = qt;
+      QML_IMPORT_PATH = "${qt}/lib/qt-6/qml";
       packages = (with pkgs; [
 	      bashInteractive
         cmake
@@ -26,6 +27,7 @@
 
 	      qtcreator
 	      libGL
+        vulkan-headers
       ]) ++ [ qt ];
     };
   };

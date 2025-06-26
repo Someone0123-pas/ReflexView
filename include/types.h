@@ -19,15 +19,15 @@ using physical_offset = unsigned;
 
 // Handles rom-addresses with GBA-IO-Mapping
 class logical_offset {
-    unsigned offset;
+    const unsigned offset;
 
 public:
     logical_offset(unsigned offset = ROM_MAPADR) : offset {offset} {
         if (offset < ROM_MAPADR || offset > ROM_MAPADR + ROM_SIZE)
             UI->error("Invalid logical address");
     }
-    operator unsigned() { return offset; }
-    auto get_physical_offset() -> physical_offset { return offset - ROM_MAPADR; }
+    operator unsigned() const { return offset; }
+    auto get_physical_offset() const -> physical_offset { return offset - ROM_MAPADR; }
 };
 
 enum class Region : char { US, EU, JP };

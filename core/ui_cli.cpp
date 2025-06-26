@@ -8,12 +8,15 @@
 CLI::CLI(const std::string& filepath) : UserInterface(filepath) {}
 
 void CLI::set_ui(const std::string& filepath) {
-    if (UI) UI->error("UI has already been set");
+    if (UI) {
+        UI->error("UI has already been set");
+    }
     UI = std::unique_ptr<CLI>(new CLI {filepath});
 }
 
 auto CLI::get_rom_filepath() const -> std::string {
-    if (!std::filesystem::exists(filepath)) error("File doesn't exist");
+    if (!std::filesystem::exists(filepath))
+        error("File doesn't exist");
     return filepath;
 }
 

@@ -5,8 +5,6 @@ CompileFlags:
     -Wno-gnu-statement-expression-from-macro-expansion
   ]
 
----
-
 Diagnostics:
   ClangTidy:
     Add: [
@@ -14,20 +12,25 @@ Diagnostics:
       performance-*,
       portability-*,
       modernize-*,
-      clang-analyzer-*
-      cppcoreguidelines-init-variables
+      clang-analyzer-*,
+      cppcoreguidelines-*
     ]
     Remove: [
       modernize-avoid-c-arrays,
       modernize-use-nodiscard,
       bugprone-easily-swappable-parameters,
-      bugprone-implicit-widening-of-multiplication-result
+      bugprone-implicit-widening-of-multiplication-result,
+      cppcoreguidelines-avoid-c-arrays,
+      cppcoreguidelines-pro-bounds-pointer-arithmetic,
+      cppcoreguidelines-avoid-non-const-global-variables,
+      cppcoreguidelines-avoid-magic-numbers,
+      cppcoreguidelines-avoid-const-or-ref-data-members,
+      cppcoreguidelines-non-private-member-variables-in-classes,
+      cppcoreguidelines-special-member-functions
     ]
-
 ---
-
 If:
-  PathMatch: lib/*
+  PathMatch: lib/.*
 Diagnostics:
-  ClangTidy:
-    Remove: "*"
+    ClangTidy:
+      Remove: "*"

@@ -18,10 +18,11 @@ protected:
 
 public:
     virtual ~Byteviewer() = default;
+
     virtual auto baseadr() const -> logical_offset = 0;
-    virtual auto get_u8(logical_offset) const -> u8;
-    virtual auto get_u16(logical_offset) const -> u16;
-    virtual auto get_u32(logical_offset) const -> u32;
+    virtual auto get_u8(const logical_offset&) const -> u8;
+    virtual auto get_u16(const logical_offset&) const -> u16;
+    virtual auto get_u32(const logical_offset&) const -> u32;
 };
 
 // For sections with unknown size and []-indexing like an array
