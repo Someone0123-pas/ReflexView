@@ -1,8 +1,11 @@
 import QtQuick
 
 Window {
-    width: 640
-    height: 480
+    id: root
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("ReflexView")
+    Text {
+        text: qsTr("Different")
+        anchors.centerIn: parent
+    }
 }
