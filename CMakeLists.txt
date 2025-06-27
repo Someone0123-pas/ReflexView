@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.9)
 
 add_executable(reflexview
     core/main.cpp
@@ -21,17 +21,34 @@ add_executable(reflexview
     core/algorithms/gbapng.cpp
     core/algorithms/lzss.cpp
     core/algorithms/sha1.cpp
+
+    qt/init.cpp
+    qt/debug.cpp
+)
+
+set(QMLS
+    qt/init.qml
+)
+
+foreach(qml IN LISTS QMLS)
+    get_filename_component(qml_basename "${qml}" NAME)
+    set_source_files_properties(${qml} PROPERTIES QT_RESOURCE_ALIAS ${qml_basename})
+endforeach()
+
+qt_add_qml_module(reflexview
+    URI mainwindow
+    RESOURCE_PREFIX "/"
+    QML_FILES
+        ${QMLS}
 )
 
 add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
-add_subdirectory(qt)
+set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
 target_link_libraries(reflexview PRIVATE
     Qt6::Quick
     spng_static
 )
-
-set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
 target_include_directories(reflexview PUBLIC include)
 target_compile_options(reflexview PRIVATE
