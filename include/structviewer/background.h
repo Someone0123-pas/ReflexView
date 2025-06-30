@@ -21,18 +21,19 @@ class BackgroundView : public Byteviewer {
 
 public:
     BackgroundView(unsigned index) : Byteviewer(), index {index} {
-        if (index > 0x1e) {
+        if (index > max_index) {
             UI->error("Invalid BackgroundView::index");
         }
     }
     static const unsigned size;
+    static const unsigned max_index;
     auto baseadr() const -> logical_offset override;
 
     auto get_width() const -> unsigned;
     auto get_height() const -> unsigned;
-    void dump_tileset_4bpp(const std::string& filepath);
-    void dump_png_gray(const std::string& filepath, bool inversed);
-    void dump_png(const std::string& filepath);
+    void dump_tileset_4bpp(const std::string& filepath) const;
+    void dump_png_gray(const std::string& filepath, bool inversed) const;
+    void dump_png(const std::string& filepath) const;
 };
 
 #endif  // BACKGROUND_H

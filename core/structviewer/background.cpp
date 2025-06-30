@@ -11,6 +11,7 @@
 #include "types.h"
 
 const unsigned BackgroundView::size {0x20};
+const unsigned BackgroundView::max_index {0x1e};
 auto BackgroundView::baseadr() const -> logical_offset { return get_u32(ROM_gBACKGROUNDS + index * 4); }
 
 auto BackgroundView::get_tilesetview() const -> const TilesetView {
@@ -31,12 +32,12 @@ auto BackgroundView::get_tilemapview() const -> const TilemapView {
 auto BackgroundView::get_width() const -> unsigned { return get_u16(baseadr()); }
 auto BackgroundView::get_height() const -> unsigned { return get_u16(baseadr() + 2); }
 
-void BackgroundView::dump_tileset_4bpp(const std::string& filepath) {
+void BackgroundView::dump_tileset_4bpp(const std::string& filepath) const {
     auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
     std::ofstream {filepath, std::ios::binary}.write(tileset.get(), tileset_size);
 }
 
-void BackgroundView::dump_png_gray(const std::string& filepath, bool inversed) {
+void BackgroundView::dump_png_gray(const std::string& filepath, bool inversed) const {
     auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
     auto [pngbuffer, pngbuffer_size] {
         png::from_4bpp_tiled_image_gray(tileset.get(), get_width(), get_height(), inversed)
@@ -44,7 +45,7 @@ void BackgroundView::dump_png_gray(const std::string& filepath, bool inversed) {
     std::ofstream {filepath, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 }
 
-void BackgroundView::dump_png(const std::string& filepath) {
+void BackgroundView::dump_png(const std::string& filepath) const {
     auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
     auto [pngbuffer, pngbuffer_size] {png::from_4bpp_tiled_image(
         tileset.get(), get_width(), get_height(), get_paletteview(), get_tilemapview()
