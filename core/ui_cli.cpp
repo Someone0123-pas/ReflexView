@@ -129,5 +129,5 @@ static void arg::backgrounds() {
 }
 
 static void arg::backgrounds(unsigned index) {
-    BackgroundView {index}.dump_png(arg::outputdir / std::format("background-{:02}.png", index));
+    BackgroundView {index}.dump(arg::outputdir / std::format("background-{:02}", index));
 }

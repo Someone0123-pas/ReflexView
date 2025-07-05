@@ -1,7 +1,9 @@
 #include "structviewer/background.h"
 
 #include <fstream>
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "algorithms/gbapng.h"
 #include "algorithms/lzss.h"
@@ -32,23 +34,49 @@ auto BackgroundView::get_tilemapview() const -> const TilemapView {
 auto BackgroundView::get_width() const -> unsigned { return get_u16(baseadr()); }
 auto BackgroundView::get_height() const -> unsigned { return get_u16(baseadr() + 2); }
 
-void BackgroundView::dump_tileset_4bpp(const std::string& filepath) const {
-    auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
-    std::ofstream {filepath, std::ios::binary}.write(tileset.get(), tileset_size);
+auto BackgroundView::get_png() const -> std::pair<std::unique_ptr<const char[]>, const long> {
+    return png::from_4bpp_tiled_image(
+        lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), get_paletteview(),
+        get_tilemapview()
+    );
 }
 
-void BackgroundView::dump_png_gray(const std::string& filepath, bool inversed) const {
-    auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
-    auto [pngbuffer, pngbuffer_size] {
-        png::from_4bpp_tiled_image_gray(tileset.get(), get_width(), get_height(), inversed)
-    };
-    std::ofstream {filepath, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+auto BackgroundView::get_png_gray(bool inversed) const
+    -> std::pair<std::unique_ptr<const char[]>, const long> {
+    return png::from_4bpp_tiled_image_gray(
+        lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), inversed
+    );
 }
 
-void BackgroundView::dump_png(const std::string& filepath) const {
+void BackgroundView::dump_tileset_4bpp(const std::string& filename) const {
     auto [tileset, tileset_size] {lzss::decompress(get_tilesetview())};
-    auto [pngbuffer, pngbuffer_size] {png::from_4bpp_tiled_image(
-        tileset.get(), get_width(), get_height(), get_paletteview(), get_tilemapview()
-    )};
-    std::ofstream {filepath, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+    std::ofstream {filename + ".4bpp", std::ios::binary}.write(tileset.get(), tileset_size);
+}
+
+void BackgroundView::dump(const std::string& filename) const {
+    auto [pngbuffer, pngbuffer_size] {get_png()};
+    std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+
+    const std::vector<u8>& tilemap {get_tilemapview().get_bin()};
+    const std::vector<char>& tilemap_char {tilemap.begin(), tilemap.end()};
+    std::ofstream {filename + ".bin", std::ios::binary}.write(
+        tilemap_char.data(), static_cast<long>(tilemap_char.size())
+    );
+
+    const std::vector<u8>& palette {get_paletteview().get_gbapal()};
+    const std::vector<char>& palette_char {palette.begin(), palette.end()};
+    std::ofstream {filename + ".gbapal", std::ios::binary}.write(
+        palette_char.data(), static_cast<long>(palette_char.size())
+    );
+}
+
+void BackgroundView::dump_gray(const std::string& filename, bool inversed) const {
+    auto [pngbuffer, pngbuffer_size] {get_png_gray(inversed)};
+    std::ofstream {filename, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+
+    const std::vector<u8>& palette {get_paletteview().get_gbapal()};
+    const std::vector<char>& palette_char {palette.begin(), palette.end()};
+    std::ofstream {filename + ".gbapal", std::ios::binary}.write(
+        palette_char.data(), static_cast<long>(palette_char.size())
+    );
 }

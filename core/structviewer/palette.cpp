@@ -6,6 +6,12 @@
 
 auto PaletteView::baseadr() const -> logical_offset { return offset; }
 
+auto PaletteView::get_gbapal() const -> const std::vector<u8> {
+    std::vector<u8> gbapal(size * 2);
+    for (unsigned index {}; index < size * 2; ++index) { gbapal.at(index) = get_u8(baseadr() + index); }
+    return gbapal;
+}
+
 // Returns a u8 vector that confirms to the specifications of a struct spng_plte_entry array as
 // specified in spng.h
 auto PaletteView::get_spng_plte() const -> const std::vector<u8> {

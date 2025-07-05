@@ -143,7 +143,6 @@ auto png::from_4bpp_tiled_image(
     status = spng_set_plte(ctx, &plte);
     CHECK_STATUS;
 
-    // TODO: Call encode from 8x8 tiles, get buffer and return
     encode_png_by_row(
         ctx, tileheight * TILE_PIXELHEIGHT, tilewidth * TILE_PIXELWIDTH,
         [&tiled_image, &tilewidth, &tilemap](unsigned rowindex, unsigned columnbyteindex) -> unsigned char {
