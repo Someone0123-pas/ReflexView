@@ -1,3 +1,4 @@
+#include "qt/qtui.h"
 #include "ui.h"
 
 auto main(int argc, char* argv[]) -> int {

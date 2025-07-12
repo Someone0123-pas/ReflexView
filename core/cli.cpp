@@ -10,6 +10,22 @@
 #include "types.h"
 #include "ui.h"
 
+auto UserInterface::get_rom_filepath() const -> std::string {
+    if (!std::filesystem::exists(filepath)) {
+        error("File doesn't exist");
+    }
+    return filepath;
+}
+
+void UserInterface::set_rom_filepath(const std::string& filepath) {
+    if (!std::filesystem::exists(filepath)) {
+        error("File doesn't exist");
+    }
+    this->filepath = filepath;
+}
+
+auto UserInterface::is_filepath_loaded() const -> bool { return !filepath.empty(); }
+
 CLI::CLI(const std::string& filepath) : UserInterface(filepath) {}
 
 void CLI::set_ui(const std::string& filepath) {
@@ -21,13 +37,6 @@ void CLI::set_ui(const std::string& filepath) {
     if (!std::filesystem::exists(filepath)) {
         UI->error("File doesn't exist");
     }
-}
-
-auto CLI::get_rom_filepath() const -> std::string {
-    if (!std::filesystem::exists(filepath)) {
-        error("File doesn't exist");
-    }
-    return filepath;
 }
 
 namespace arg {

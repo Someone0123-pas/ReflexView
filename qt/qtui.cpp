@@ -1,3 +1,5 @@
+#include "qt/qtui.h"
+
 #include <filesystem>
 #include <string>
 
@@ -22,18 +24,6 @@ void QT::set_ui(const std::string& filepath) {
     if (!std::filesystem::exists(filepath)) {
         UI->error("File doesn't exist");
     }
-}
-
-auto QT::get_rom_filepath() const -> std::string {
-    // TODO: Check whether filepath is empty, then ask for ROM
-    if (!std::filesystem::exists(filepath)) {
-        error("File doesn't exist");
-    }
-    return filepath;
-}
-
-void QT::set_rom_filepath(const std::string& filepath) {
-    UserInterface::filepath = filepath;
 }
 
 void QT::error(const std::string& errormessage) const {

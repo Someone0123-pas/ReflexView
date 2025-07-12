@@ -10,8 +10,8 @@ ImageProvider::ImageProvider() : QQuickImageProvider(QQuickImageProvider::Image)
 
 auto ImageProvider::image_from_id(const QString& id) const -> QImage {
     return QImage::fromData(
-        reinterpret_cast<const unsigned char*>(images.at(id).first.get()), static_cast<int>(images.at(id).second),
-        "PNG"
+        reinterpret_cast<const unsigned char*>(images.at(id).first.get()),
+        static_cast<int>(images.at(id).second), "PNG"
     );
 }
 

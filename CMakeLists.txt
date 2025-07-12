@@ -4,14 +4,13 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 qt_standard_project_setup(REQUIRES 6.9)
 
 add_executable(reflexview
     core/main.cpp
     core/byteviewer.cpp
-    core/ui_cli.cpp
-    core/ui_qt.cpp
+    core/cli.cpp
 
     core/structviewer/background.cpp
     core/structviewer/palette.cpp
@@ -24,8 +23,9 @@ add_executable(reflexview
     core/algorithms/sha1.cpp
 
     qt/mainwindow.cpp
-    qt/debug.cpp
+    qt/qtui.cpp
     qt/imageprovider.cpp
+    qt/debug.cpp
 )
 
 set(QMLS
@@ -40,14 +40,19 @@ endforeach()
 qt_add_qml_module(reflexview
     URI mainwindow
     RESOURCE_PREFIX "/"
+    VERSION 1.0
     QML_FILES
         ${QMLS}
+    SOURCES
+        include/appbridge.h
+        qt/appbridge.cpp
 )
 
 add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
 set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
 target_link_libraries(reflexview PRIVATE
+    Qt6::Core
     Qt6::Quick
     spng_static
 )

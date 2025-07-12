@@ -1,10 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 ApplicationWindow {
     id: root
     visible: true
+    title: qsTr("ReflexView: No ROM loaded")
 
     readonly property int margin: 20
 
@@ -13,6 +15,7 @@ ApplicationWindow {
     width: mainwin.Layout.preferredWidth + 2 * margin
     height: mainwin.Layout.preferredHeight + 2 * margin
 
+    AppBridge { id: appbridge }
 
     RowLayout {
         id: mainwin
@@ -35,7 +38,7 @@ ApplicationWindow {
                 text: qsTr("Load ROM")
                 Layout.fillWidth: true
                 onClicked: {
-                    romstate.state = "LOADED"
+                    rompicker.open()
                 }
             }
 
@@ -70,7 +73,6 @@ ApplicationWindow {
                 fillMode: Image.PreserveAspectFit
 
                 visible: menuestate.state !== "NONE"
-                source: "image://generated/background-20"
             }
         }
         
@@ -86,13 +88,14 @@ ApplicationWindow {
             },
             State {
                 name: "BACKGROUNDS"
+                PropertyChanges { mainimg.source: "image://generated/background-24" }
             }
         ]
     }
 
     StateGroup {
         id: romstate
-        state: "NONE"
+        state: appbridge.is_filepath_loaded() ? "LOADED" : "NONE"
 
         states: [
             State {
@@ -101,9 +104,19 @@ ApplicationWindow {
             },
             State {
                 name: "LOADED"
-                PropertyChanges { root.title: qsTr("ReflexView: Loaded ROM") }
+                PropertyChanges { root.title: qsTr("ReflexView: ") + appbridge.get_rom_filepath() }
             }
         ]
+    }
+
+    FileDialog {
+        id: rompicker
+        title: qsTr("Select ROM")
+
+        onAccepted: {
+            appbridge.set_rom_filepath(selectedFile)
+            romstate.state = "LOADED"
+        }
     }
 
 }
