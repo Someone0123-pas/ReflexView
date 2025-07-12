@@ -119,7 +119,7 @@ static void arg::help() {
     std::println("   -h\t\t\t\t show this help and immediately exit");
     std::println(
         "   -b [INDEX]\t\t\t dump background as coloured, indexed PNG with INDEX (0-30 or all, if not "
-        "specified)"
+        "specified),\n\t\t\t\t\t palette as .agbpal and tilemap as .tilemap"
     );
     std::println("   -o <DIR>\t\t\t dump all outputs into the specified directory");
 }

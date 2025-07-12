@@ -20,7 +20,7 @@ public:
         : Byteviewer(), offset {offset}, size {size}, startnum {startnum} {}
     auto baseadr() const -> logical_offset override;
 
-    auto get_gbapal() const -> const std::vector<u8>;
+    auto get_agbpal() const -> const std::vector<u8>;
     auto get_spng_plte() const -> const std::vector<u8>;
 };
 

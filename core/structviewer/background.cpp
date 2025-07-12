@@ -57,15 +57,15 @@ void BackgroundView::dump(const std::string& filename) const {
     auto [pngbuffer, pngbuffer_size] {get_png()};
     std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 
-    const std::vector<u8>& tilemap {get_tilemapview().get_bin()};
+    const std::vector<u8>& tilemap {get_tilemapview().get_tilemap()};
     const std::vector<char>& tilemap_char {tilemap.begin(), tilemap.end()};
-    std::ofstream {filename + ".bin", std::ios::binary}.write(
+    std::ofstream {filename + ".tilemap", std::ios::binary}.write(
         tilemap_char.data(), static_cast<long>(tilemap_char.size())
     );
 
-    const std::vector<u8>& palette {get_paletteview().get_gbapal()};
+    const std::vector<u8>& palette {get_paletteview().get_agbpal()};
     const std::vector<char>& palette_char {palette.begin(), palette.end()};
-    std::ofstream {filename + ".gbapal", std::ios::binary}.write(
+    std::ofstream {filename + ".agbpal", std::ios::binary}.write(
         palette_char.data(), static_cast<long>(palette_char.size())
     );
 }
@@ -73,10 +73,4 @@ void BackgroundView::dump(const std::string& filename) const {
 void BackgroundView::dump_gray(const std::string& filename, bool inversed) const {
     auto [pngbuffer, pngbuffer_size] {get_png_gray(inversed)};
     std::ofstream {filename, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
-
-    const std::vector<u8>& palette {get_paletteview().get_gbapal()};
-    const std::vector<char>& palette_char {palette.begin(), palette.end()};
-    std::ofstream {filename + ".gbapal", std::ios::binary}.write(
-        palette_char.data(), static_cast<long>(palette_char.size())
-    );
 }

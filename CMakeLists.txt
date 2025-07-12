@@ -11,6 +11,7 @@ add_executable(reflexview
     core/main.cpp
     core/byteviewer.cpp
     core/ui_cli.cpp
+    core/ui_qt.cpp
 
     core/structviewer/background.cpp
     core/structviewer/palette.cpp
@@ -22,12 +23,13 @@ add_executable(reflexview
     core/algorithms/lzss.cpp
     core/algorithms/sha1.cpp
 
-    qt/init.cpp
+    qt/mainwindow.cpp
     qt/debug.cpp
+    qt/imageprovider.cpp
 )
 
 set(QMLS
-    qt/init.qml
+    qt/mainwindow.qml
 )
 
 foreach(qml IN LISTS QMLS)

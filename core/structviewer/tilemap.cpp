@@ -7,7 +7,7 @@
 
 auto TilemapView::baseadr() const -> logical_offset { return offset; }
 
-auto TilemapView::get_bin() const -> const std::vector<u8> {
+auto TilemapView::get_tilemap() const -> const std::vector<u8> {
     std::vector<u8> bin(size * 2);
     for (unsigned index {}; index < size * 2; ++index) { bin.at(index) = get_u8(baseadr() + index); }
     return bin;

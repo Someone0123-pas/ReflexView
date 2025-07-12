@@ -34,7 +34,7 @@ public:
     auto get_png() const -> std::pair<std::unique_ptr<const char[]>, const long>;
     auto get_png_gray(bool inversed) const -> std::pair<std::unique_ptr<const char[]>, const long>;
     
-    // Dump Tileset as .png, Tilemap as .bin and Palette as .gbapal
+    // Dump Tileset as .png, Tilemap as .tilemap and Palette as .agbpal
     // Filenames always without extension
     void dump(const std::string& filename) const;
     void dump_gray(const std::string& filename, bool inversed) const;

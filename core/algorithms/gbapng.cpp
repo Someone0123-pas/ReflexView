@@ -41,8 +41,8 @@ static constexpr auto translate_to_4bpp_tiled_image_index {
  * The first index (rowindex) represents the index of the current row in the png.
  * The second index (columnbyteindex) represents one byte of pngrow, so two pixels with bitdepth 4
    and one pixel with bitdepth 8.
- * The lambda then returns the according pixelvalue from captured datastructures pngrow, such that
-   pngrow can afterwards be used to encode a row of the png.
+ * The lambda then returns the according pixelvalue which is put into pngrow, such that
+   pngrow can afterwards be used to encode one row of the png.
 
  * ctx must already have all necessary metadata (e.g. idhr, plte) set.
  */

@@ -41,6 +41,7 @@ public:
     static void set_ui();
     static void set_ui(const std::string& filepath);
     auto get_rom_filepath() const -> std::string override;
+    void set_rom_filepath(const std::string& filepath);
     void error(const std::string&) const override;
     auto run(int argc, char* argv[]) -> int override;
 };
