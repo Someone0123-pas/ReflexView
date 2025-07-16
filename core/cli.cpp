@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <print>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -24,10 +25,14 @@ void UserInterface::set_rom_filepath(const std::string& filepath) {
         return;
     }
 
-    // TODO: Restore old filepath
-    // Load ROM preemptively to check for integrity
-    this->filepath = filepath;
-    RawView {};
+    const std::string old_filepath {this->filepath};
+    try {
+        this->filepath = filepath;
+        Byteviewer::load_rom();
+    } catch (std::runtime_error& e) {
+        this->filepath = old_filepath;
+        throw;
+    }
 }
 
 auto UserInterface::is_filepath_loaded() const -> bool { return !filepath.empty(); }
@@ -62,7 +67,7 @@ static void backgrounds(unsigned index);
 void CLI::error(const std::string& errormessage) const {
     std::println(std::cerr, "Error: {}", errormessage);
     arg::help();
-    std::exit(1);
+    std::terminate();
 }
 
 auto CLI::run(int argc, char* argv[]) -> int {

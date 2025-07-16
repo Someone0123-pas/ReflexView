@@ -11,13 +11,13 @@
 class Byteviewer {
     static std::unique_ptr<const char[]> rom;
     static Region region;
-    static void load_rom();
 
 protected:
     Byteviewer();
 
 public:
     virtual ~Byteviewer() = default;
+    static void load_rom();
 
     virtual auto baseadr() const -> logical_offset = 0;
     virtual auto get_u8(const logical_offset&) const -> u8;
