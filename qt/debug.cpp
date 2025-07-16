@@ -18,3 +18,7 @@ void qtdebug::check_qrc_file(const QString& filepath) {
         qDebug() << "File \"" << filepath << "\" doesn't exist in the qrc-filesystem.\n";
     }
 }
+
+void qtdebug::print_qml_import_paths(const QQmlApplicationEngine& engine) {
+    qDebug() << engine.importPathList();
+}

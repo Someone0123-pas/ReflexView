@@ -27,7 +27,7 @@ void QT::set_ui(const std::string& filepath) {
 }
 
 void QT::error(const std::string& errormessage) const {
-    // TODO
+    throw std::runtime_error(errormessage);
 }
 
 auto QT::run(int argc, char* argv[]) -> int { return window_initialise(argc, argv); }

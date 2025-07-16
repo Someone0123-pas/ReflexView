@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "byteviewer.h"
 #include "structviewer/background.h"
 #include "types.h"
 #include "ui.h"
@@ -20,8 +21,13 @@ auto UserInterface::get_rom_filepath() const -> std::string {
 void UserInterface::set_rom_filepath(const std::string& filepath) {
     if (!std::filesystem::exists(filepath)) {
         error("File doesn't exist");
+        return;
     }
+
+    // TODO: Restore old filepath
+    // Load ROM preemptively to check for integrity
     this->filepath = filepath;
+    RawView {};
 }
 
 auto UserInterface::is_filepath_loaded() const -> bool { return !filepath.empty(); }

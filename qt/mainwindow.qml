@@ -8,14 +8,13 @@ ApplicationWindow {
     visible: true
     title: qsTr("ReflexView: No ROM loaded")
 
+    required property QmlBridge qmlbridge
     readonly property int margin: 20
 
     minimumWidth: mainwin.Layout.minimumWidth + 2 * margin
     minimumHeight: mainwin.Layout.minimumHeight + 2 * margin
     width: mainwin.Layout.preferredWidth + 2 * margin
     height: mainwin.Layout.preferredHeight + 2 * margin
-
-    AppBridge { id: appbridge }
 
     RowLayout {
         id: mainwin
@@ -52,7 +51,7 @@ ApplicationWindow {
                         menuestate.state = "BACKGROUNDS"
                     }
                 }
-                // Insert Buttons here
+                // New Menue-Buttons here
             }
         }
 
@@ -95,7 +94,7 @@ ApplicationWindow {
 
     StateGroup {
         id: romstate
-        state: appbridge.is_filepath_loaded() ? "LOADED" : "NONE"
+        state: root.qmlbridge.is_filepath_loaded() ? "LOADED" : "NONE"
 
         states: [
             State {
@@ -104,19 +103,39 @@ ApplicationWindow {
             },
             State {
                 name: "LOADED"
-                PropertyChanges { root.title: qsTr("ReflexView: ") + appbridge.get_rom_filepath() }
+                PropertyChanges { root.title: qsTr("ReflexView: ") + root.qmlbridge.get_rom_filepath() }
             }
         ]
     }
+
 
     FileDialog {
         id: rompicker
         title: qsTr("Select ROM")
 
         onAccepted: {
-            appbridge.set_rom_filepath(selectedFile)
-            romstate.state = "LOADED"
+            root.qmlbridge.set_rom_filepath(selectedFile)
         }
     }
 
+    Connections {
+        target: root.qmlbridge
+        function onError(errortitle, errormessage) {
+            errorPopup.title = errortitle
+            errorPopup.contentItem.text = errormessage
+            errorPopup.open()
+        }
+        function onSuccess_set_rom_filepath() {
+            romstate.state = "LOADED"
+            menuestate.state = "NONE"
+        }
+    }
+
+    Dialog {
+        id: errorPopup
+        anchors.centerIn: parent
+        popupType: Popup.Window
+        focus: true
+        contentItem: Text {}
+    }
 }

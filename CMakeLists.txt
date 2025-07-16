@@ -4,8 +4,13 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+include(FetchContent)
+
+find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2 Widgets)
 qt_standard_project_setup(REQUIRES 6.9)
+
+add_subdirectory(lib/libspng-0.7.4)
+set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(reflexview
     core/main.cpp
@@ -32,6 +37,7 @@ set(QMLS
     qt/mainwindow.qml
 )
 
+# For flattening resource paths
 foreach(qml IN LISTS QMLS)
     get_filename_component(qml_basename "${qml}" NAME)
     set_source_files_properties(${qml} PROPERTIES QT_RESOURCE_ALIAS ${qml_basename})
@@ -44,16 +50,14 @@ qt_add_qml_module(reflexview
     QML_FILES
         ${QMLS}
     SOURCES
-        include/appbridge.h
-        qt/appbridge.cpp
+        include/qmlbridge.h
+        qt/qmlbridge.cpp
 )
 
-add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
-set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
-
 target_link_libraries(reflexview PRIVATE
-    Qt6::Core
     Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Widgets
     spng_static
 )
 
