@@ -24,7 +24,7 @@ auto ImageProvider::requestImage(const QString& id, QSize* size, const QSize& re
             "Internal Error: Wrong logic\nThe program is ill-formed, ImageProvider was instantiated without "
             "setting an errorhandler QmlBridge."
         );
-        std::terminate();
+        std::exit(1);
     }
 
     if (images.contains(id)) {

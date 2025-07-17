@@ -9,7 +9,7 @@ include(FetchContent)
 find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2 Widgets)
 qt_standard_project_setup(REQUIRES 6.9)
 
-add_subdirectory(lib/libspng-0.7.4)
+add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
 set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
 add_executable(reflexview
@@ -74,3 +74,14 @@ if(MINGW OR CMAKE_COMPILER_IS_GNUCXX)
 target_link_options(reflexview PRIVATE
 )
 endif()
+
+set_target_properties(reflexview PROPERTIES
+    WIN32_EXECUTABLE TRUE
+)
+
+include(GNUInstallDirs)
+install(TARGETS reflexview
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

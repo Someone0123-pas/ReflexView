@@ -46,7 +46,7 @@ void CLI::set_ui(const std::string& filepath) {
     UI = std::unique_ptr<CLI>(new CLI {filepath});
 
     if (!std::filesystem::exists(filepath)) {
-        UI->error("Error: Path", std::format("The file with path {} doesn't exist", filepath));
+        UI->error("Error: Path", std::format("The file with path {} doesn't exist.", filepath));
     }
 }
 
@@ -67,7 +67,7 @@ static void backgrounds(unsigned index);
 void CLI::error(const std::string& errortitle, const std::string& errormessage) const {
     std::println(std::cerr, "{}\n{}", errortitle, errormessage);
     arg::help();
-    std::terminate();
+    std::exit(1);
 }
 
 auto CLI::run(int argc, char* argv[]) -> int {
