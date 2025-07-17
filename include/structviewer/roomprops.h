@@ -13,7 +13,7 @@ class RoomPropsView : public Byteviewer {
 
 public:
     RoomPropsView(unsigned index) : Byteviewer(), index {index} {
-        if (index > 0x3d6) UI->error("Invalid RoomPropsView::index");
+        if (index > 0x3d6) UI->error("Internal Error: Indices", "An invalid RoomPropsView::index was given.");
     }
     static const unsigned size;
     auto baseadr() const -> logical_offset override;

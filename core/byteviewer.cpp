@@ -23,14 +23,14 @@ Byteviewer::Byteviewer() {
 void Byteviewer::load_rom() {
     std::string filepath = UI->get_rom_filepath();
     if (std::filesystem::file_size(filepath) != ROM_SIZE)
-        UI->error("ROM has incorrect size");
+        UI->error("Error: Loading ROM", "The file is not 16MB big.");
 
     std::ifstream romfile {filepath, std::ios::binary};
     auto romdump {std::make_unique<char[]>(ROM_SIZE)};
 
     romfile.read(romdump.get(), ROM_SIZE);
     if (romfile.gcount() != ROM_SIZE)
-        UI->error("ROM has incorrect size");
+        UI->error("Error: Loading ROM", "The file is not 16MB big.");
 
     rom = std::move(romdump);
 
@@ -38,7 +38,7 @@ void Byteviewer::load_rom() {
     if (sha1sum == SHA1SUM_U)
         region = Region::US;
     else
-        UI->error("Sha1 sum doesn't match known ROMs");
+        UI->error("Error: Loading ROM", "The sha1-sum doesn't match known ROMs.");
 }
 
 auto Byteviewer::get_u8(const logical_offset& offset) const -> u8 {

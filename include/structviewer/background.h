@@ -22,7 +22,7 @@ class BackgroundView : public Byteviewer {
 public:
     BackgroundView(unsigned index) : Byteviewer(), index {index} {
         if (index > max_index) {
-            UI->error("Invalid BackgroundView::index");
+            UI->error("Internal Error: Indices", "An invalid BackgroundView::index was given");
         }
     }
     static const unsigned size;

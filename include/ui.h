@@ -16,7 +16,7 @@ public:
     virtual auto get_rom_filepath() const -> std::string;
     virtual void set_rom_filepath(const std::string&);
     virtual auto is_filepath_loaded() const -> bool;
-    virtual void error(const std::string&) const = 0;
+    virtual void error(const std::string& errortitle, const std::string& errormessage) const = 0;
     virtual auto run(int argc, char* argv[]) -> int = 0;
 };
 
@@ -29,7 +29,7 @@ class CLI : public UserInterface {
 public:
     ~CLI() override = default;
     static void set_ui(const std::string& filepath);
-    void error(const std::string&) const override;
+    void error(const std::string& errortitle, const std::string& errormessage) const override;
     auto run(int argc, char* argv[]) -> int override;
 };
 

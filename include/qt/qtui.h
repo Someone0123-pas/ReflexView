@@ -15,7 +15,7 @@ public:
     ~QT() override = default;
     static void set_ui();
     static void set_ui(const std::string& filepath);
-    void error(const std::string&) const override;
+    void error(const std::string& errortitle, const std::string& errormessage) const override;
     auto run(int argc, char* argv[]) -> int override;
 };
 

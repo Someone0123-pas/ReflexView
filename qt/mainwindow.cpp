@@ -1,20 +1,25 @@
 #include <qquickstyle.h>
+
 #include <QGuiApplication>
 #include <QImage>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickStyle>
 
-#include "qt/imageprovider.h"
 #include "qmlbridge.h"
+#include "qt/imageprovider.h"
 
 auto window_initialise(int argc, char* argv[]) -> int {
     QGuiApplication app {argc, argv};
     QQmlApplicationEngine engine {};
 
     // Objects automatically deleted by engine
-    engine.setInitialProperties({{"qmlbridge", QVariant::fromValue(new QmlBridge)}});
-    engine.addImageProvider("generated", new ImageProvider);
+    QmlBridge* qmlbridge {new QmlBridge};
+    ImageProvider* imageprovider {new ImageProvider};
+    imageprovider->set_errorhandler(qmlbridge);
+
+    engine.setInitialProperties({{"qmlbridge", QVariant::fromValue(qmlbridge)}});
+    engine.addImageProvider("generated", imageprovider);
 
     engine.load(QUrl {"qrc:/mainwindow/mainwindow.qml"});
     return app.exec();

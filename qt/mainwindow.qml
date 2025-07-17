@@ -24,8 +24,8 @@ ApplicationWindow {
         anchors.margins: root.margin
         spacing: root.margin * 2
 
-        Layout.preferredWidth: 800
-        Layout.preferredHeight: 600
+        Layout.preferredWidth: 600
+        Layout.preferredHeight: 400
 
         Rectangle {
             Layout.alignment: Qt.AlignTop
@@ -95,6 +95,7 @@ ApplicationWindow {
                     horizontalAlignment: TextField.AlignHCenter
 
                     text: qsTr(background_menue.pictureindex)
+                    color: Material.accent
                     onTextChanged: {
                         if (text !== "") {
                             var nextindex = parseInt(text)
@@ -167,8 +168,7 @@ ApplicationWindow {
 
     Connections {
         target: root.qmlbridge
-        function onError(errortitle, errormessage) {
-            errorPopup.title = errortitle
+        function onError(errormessage) {
             errorPopup.contentItem.text = errormessage
             errorPopup.open()
         }
@@ -182,8 +182,9 @@ ApplicationWindow {
     Dialog {
         id: errorPopup
         anchors.centerIn: parent
-        popupType: Popup.Window
-        focus: true
-        contentItem: Text {}
+        modal: true
+        contentItem: Label {}
+        standardButtons: Dialog.Close
+        font.pointSize: 12
     }
 }

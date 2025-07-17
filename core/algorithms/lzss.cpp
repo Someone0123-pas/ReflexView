@@ -10,13 +10,14 @@
 // This decompression implementation is based on the GBATEK reference
 // https://problemkaputt.de/gbatek.htm#lzdecompressionfunctions
 // and specialised for LZSS only
-auto lzss::decompress(const RawView& compressed)
-    -> std::pair<std::unique_ptr<const char[]>, const long> {
+auto lzss::decompress(const RawView& compressed) -> std::pair<std::unique_ptr<const char[]>, const long> {
     if (compressed[0] != 0x10) {
-        UI->error("Provided TilesetView is not LZSS compressed (-> doesn't start with 0x10)");
+        UI->error(
+            "Internal Error: Wrong Header for LZSS",
+            "The provided TilesetView is not LZSS compressed (-> doesn't start with 0x10)"
+        );
     }
-    unsigned buf_size {
-        static_cast<unsigned>(compressed[1] | compressed[2] << 0x8 | compressed[3] << 0x10)};
+    unsigned buf_size {static_cast<unsigned>(compressed[1] | compressed[2] << 0x8 | compressed[3] << 0x10)};
     auto buf {std::make_unique<char[]>(buf_size)};
     unsigned buf_index {0};
 

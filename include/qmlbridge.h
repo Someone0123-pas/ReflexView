@@ -17,12 +17,10 @@ public slots:
     auto is_filepath_loaded() const -> bool;
 
     // TODO:
-    //void open_filepicker() const;
-    //void open_error_dialog() const;
-
+    // void open_filepicker() const;
 
 signals:
-    void error(const QString& errortitle, const QString& errormessage) const;
+    void error(const QString& errormessage) const;
     void success_set_rom_filepath() const;
     void success_get_rom_filepath() const;
 };

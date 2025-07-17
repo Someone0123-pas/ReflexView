@@ -24,7 +24,7 @@ class logical_offset {
 public:
     logical_offset(unsigned offset = ROM_MAPADR) : offset {offset} {
         if (offset < ROM_MAPADR || offset > ROM_MAPADR + ROM_SIZE)
-            UI->error("Invalid logical address");
+            UI->error("Internal Error: Logical Address", "An invalid logical address was given.");
     }
     operator unsigned() const { return offset; }
     auto get_physical_offset() const -> physical_offset { return offset - ROM_MAPADR; }

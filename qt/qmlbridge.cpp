@@ -11,7 +11,7 @@ auto QmlBridge::get_rom_filepath() const -> QString {
         QString filepath {QString::fromStdString(UI->get_rom_filepath())};
         emit success_get_rom_filepath();
         return filepath;
-    } catch (std::runtime_error& e) { emit error("Error!", e.what()); }
+    } catch (std::runtime_error& e) { emit error(e.what()); }
     return "";
 }
 
@@ -19,7 +19,7 @@ void QmlBridge::set_rom_filepath(const QUrl& filepath) const {
     try {
         UI->set_rom_filepath(filepath.toLocalFile().toStdString());
         emit success_set_rom_filepath();
-    } catch (std::runtime_error& e) { emit error("Error!", e.what()); }
+    } catch (std::runtime_error& e) { emit error(e.what()); }
 }
 
 auto QmlBridge::is_filepath_loaded() const -> bool { return UI->is_filepath_loaded(); }

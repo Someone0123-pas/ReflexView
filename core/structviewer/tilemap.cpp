@@ -15,11 +15,12 @@ auto TilemapView::get_tilemap() const -> const std::vector<u8> {
 
 auto TilemapView::get_tile_palette_shifted(unsigned index) const -> u8 {
     if (index > size) {
-        UI->error("Tilemap index too big");
+        UI->error("Internal Error: Indices", "The given index exceeds the size of the tilemap.");
     }
     unsigned palette_unshifted {static_cast<unsigned>(get_u16(baseadr() + index * 2) >> 12)};
     if (palette_unshifted < palette_startnum) {
         UI->error(
+            "Not implemented yet: Runtime palettes",
             "The tilemap references palettes not specified in the same struct. The palette is thus decided "
             "at runtime, which has not yet been implemented."
         );

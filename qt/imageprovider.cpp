@@ -2,6 +2,8 @@
 
 #include <QSize>
 #include <QString>
+#include <iostream>
+#include <print>
 #include <stdexcept>
 
 #include "structviewer/background.h"
@@ -16,19 +18,37 @@ auto ImageProvider::image_from_id(const QString& id) const -> QImage {
 }
 
 auto ImageProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize) -> QImage {
+    if (!errorhandler) {
+        std::println(
+            std::cerr,
+            "Internal Error: Wrong logic\nThe program is ill-formed, ImageProvider was instantiated without "
+            "setting an errorhandler QmlBridge."
+        );
+        std::terminate();
+    }
+
     if (images.contains(id)) {
         return image_from_id(id);
     }
 
     if (const auto& delimiterindex {id.lastIndexOf('-')};
         delimiterindex != -1 && id.startsWith("background")) {
-        images.try_emplace(id, BackgroundView {id.sliced(delimiterindex+1).toUInt()}.get_png());
+        try {
+            const BackgroundView background {id.sliced(delimiterindex + 1).toUInt()};
+            images.try_emplace(id, background.get_png());
+        } catch (std::runtime_error& e) {
+            emit errorhandler->error(e.what());
+            return {};
+        }
     }
+
     // Insert other PNG structs here
+
     else {
-        // TODO: Better error handling with QML
-        UI->error("The internally requested image is not associated with any type.");
+        emit errorhandler->error("The internally requested image is not associated with any type.");
     }
 
     return image_from_id(id);
 }
+
+void ImageProvider::set_errorhandler(QmlBridge* errorhandler) { this->errorhandler = errorhandler; }

@@ -14,14 +14,14 @@
 
 auto UserInterface::get_rom_filepath() const -> std::string {
     if (!std::filesystem::exists(filepath)) {
-        error("File doesn't exist");
+        error("Error: Path", std::format("The file with path {} doesn't exist.", filepath));
     }
     return filepath;
 }
 
 void UserInterface::set_rom_filepath(const std::string& filepath) {
     if (!std::filesystem::exists(filepath)) {
-        error("File doesn't exist");
+        error("Error: Path", std::format("The file with path {} doesn't exist.", filepath));
         return;
     }
 
@@ -41,12 +41,12 @@ CLI::CLI(const std::string& filepath) : UserInterface(filepath) {}
 
 void CLI::set_ui(const std::string& filepath) {
     if (UI) {
-        UI->error("UI has already been set");
+        UI->error("Internal Error: UI", "The UI has already been set.");
     }
     UI = std::unique_ptr<CLI>(new CLI {filepath});
 
     if (!std::filesystem::exists(filepath)) {
-        UI->error("File doesn't exist");
+        UI->error("Error: Path", std::format("The file with path {} doesn't exist", filepath));
     }
 }
 
@@ -64,8 +64,8 @@ static void backgrounds();
 static void backgrounds(unsigned index);
 }  // namespace arg
 
-void CLI::error(const std::string& errormessage) const {
-    std::println(std::cerr, "Error: {}", errormessage);
+void CLI::error(const std::string& errortitle, const std::string& errormessage) const {
+    std::println(std::cerr, "{}\n{}", errortitle, errormessage);
     arg::help();
     std::terminate();
 }
@@ -85,7 +85,7 @@ auto CLI::run(int argc, char* argv[]) -> int {
 
         else if (*argitr == "-o") {
             if (argitr + 1 == args.end()) {
-                UI->error("No outputdirectory specified");
+                UI->error("Error: Arguments", "No outputdirectory was specified.");
             }
             arg::outputdir = *++argitr;
         }
@@ -101,14 +101,13 @@ auto CLI::run(int argc, char* argv[]) -> int {
                 } catch (...) { commands.emplace_back(arg::BACKGROUNDS); }
         }
 
-        // Invalid argument
         else {
-            UI->error("Invalid argument");
+            UI->error("Error: Arguments", "One of the arguments was invalid.");
         }
     }
 
     if (commands.empty()) {
-        UI->error("Nothing to do!");
+        UI->error("Error: Arguments", "Nothing to do!");
     }
     if (!arg::outputdir.empty()) {
         std::filesystem::create_directories(arg::outputdir);

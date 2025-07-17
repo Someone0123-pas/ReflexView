@@ -14,11 +14,12 @@
 #include "structviewer/tilemap.h"
 #include "ui.h"
 
-#define CHECK_STATUS                          \
-    ({                                        \
-        if (status) {                         \
-            UI->error(spng_strerror(status)); \
-        }                                     \
+#define CHECK_STATUS                                                 \
+    ({                                                               \
+        if (status) {                                                \
+            spng_ctx_free(ctx);                                      \
+            UI->error("Internal Error: PNG", spng_strerror(status)); \
+        }                                                            \
     })
 static int status {};
 
@@ -67,7 +68,7 @@ void static encode_png_by_row(
 
     if (status != SPNG_EOI) {
         spng_ctx_free(ctx);
-        UI->error("PNG Encoding did not finish successfully");
+        UI->error("Internal Error: PNG", "The encoding procedure did not finish to the end");
     }
 }
 
