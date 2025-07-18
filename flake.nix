@@ -15,7 +15,7 @@
       else sourceInfo.shortRev;
 
     reflexview = pkgs.stdenv.mkDerivation {
-      pname = "ReflexView";
+      pname = "reflexview";
       version = "0.0.${revision}";
       src = ./.;
 
@@ -37,7 +37,7 @@
     packages.default = reflexview;
 
     apps.default = flake-utils.lib.mkApp {
-      drv = [ self.packages.${system}.default ];
+      drv = self.packages.${system}.default;
     };
 
     devShells.default = pkgs.mkShell {
