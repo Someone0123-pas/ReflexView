@@ -51,7 +51,7 @@ void CLI::set_ui(const std::string& filepath) {
 }
 
 namespace arg {
-enum CommandType : u8 { BACKGROUNDS, BACKGROUND_INDEX };
+enum CommandType : u8 { BACKGROUNDS, BACKGROUND_INDEX, BPP4, BPP4_INDEX };
 struct Command {
     CommandType command {};
     int index {-1};
@@ -62,6 +62,8 @@ static std::filesystem::path outputdir {};
 static void help();
 static void backgrounds();
 static void backgrounds(unsigned index);
+static void bpp4();
+static void bpp4(unsigned index);
 }  // namespace arg
 
 void CLI::error(const std::string& errortitle, const std::string& errormessage) const {
@@ -101,6 +103,17 @@ auto CLI::run(int argc, char* argv[]) -> int {
                 } catch (...) { commands.emplace_back(arg::BACKGROUNDS); }
         }
 
+        else if (*argitr == "-4") {
+            if (argitr + 1 == args.end()) {
+                commands.emplace_back(arg::BPP4);
+            } else
+                try {
+                    int index {std::stoi(*(argitr + 1))};
+                    commands.emplace_back(arg::BPP4_INDEX, index);
+                    ++argitr;
+                } catch (...) { commands.emplace_back(arg::BPP4); }
+        }
+
         else {
             UI->error("Error: Arguments", "One of the arguments was invalid.");
         }
@@ -121,6 +134,12 @@ auto CLI::run(int argc, char* argv[]) -> int {
             case arg::BACKGROUND_INDEX:
                 arg::backgrounds(cmd.index);
                 break;
+            case arg::BPP4:
+                arg::bpp4();
+                break;
+            case arg::BPP4_INDEX:
+                arg::bpp4(cmd.index);
+                break;
             default:
                 assert(false);
         }
@@ -137,7 +156,10 @@ static void arg::help() {
     std::println("  ./reflexview <ROM> <OPTIONS>\tStarts CLI Mode with the following options:");
     std::println("   -h\t\t\t\t show this help and immediately exit");
     std::println(
-        "   -b [INDEX]\t\t\t dump background as coloured, indexed PNG with INDEX (0-30 or all, if not "
+        "   -4 [INDEX]\t\t\t dump background as .4bpp file with INDEX (0-35 or all, if not specified)"
+    );
+    std::println(
+        "   -b [INDEX]\t\t\t dump background as coloured, indexed PNG with INDEX (0-35 or all, if not "
         "specified),\n\t\t\t\t\t palette as .agbpal and tilemap as .tilemap"
     );
     std::println("   -o <DIR>\t\t\t dump all outputs into the specified directory");
@@ -149,4 +171,12 @@ static void arg::backgrounds() {
 
 static void arg::backgrounds(unsigned index) {
     BackgroundView {index}.dump(arg::outputdir / std::format("background-{:02}", index));
+}
+
+static void arg::bpp4() {
+    for (unsigned index {}; index <= BackgroundView::max_index; ++index) { bpp4(index); }
+}
+
+static void arg::bpp4(unsigned index) {
+    BackgroundView {index}.dump_tileset_4bpp(arg::outputdir / std::format("background-{:02}", index));
 }

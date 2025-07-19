@@ -23,11 +23,6 @@
     })
 static int status {};
 
-static constexpr unsigned BITDEPTH_4BPP {4};  // That's why it's called 4bpp, duh
-static constexpr unsigned TILE_PIXELWIDTH {8};
-static constexpr unsigned TILE_PIXELHEIGHT {8};
-static constexpr unsigned TILE_BYTEWIDTH_4BPP {BITDEPTH_4BPP * TILE_PIXELWIDTH / 8};
-
 static constexpr auto translate_to_4bpp_tiled_image_index {
     [](unsigned y, unsigned x, unsigned max_x) -> unsigned {
         return (x % TILE_BYTEWIDTH_4BPP) +

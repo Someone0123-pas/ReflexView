@@ -13,7 +13,7 @@
 #include "types.h"
 
 const unsigned BackgroundView::size {0x20};
-const unsigned BackgroundView::max_index {0x1e};
+const unsigned BackgroundView::max_index {0x23};
 auto BackgroundView::baseadr() const -> logical_offset { return get_u32(ROM_gBACKGROUNDS + index * 4); }
 
 auto BackgroundView::get_tilesetview() const -> const TilesetView {
@@ -27,7 +27,7 @@ auto BackgroundView::get_paletteview() const -> const PaletteView {
 
 auto BackgroundView::get_tilemapview() const -> const TilemapView {
     return TilemapView {
-        get_u32(baseadr() + 0x18), get_u32(baseadr() + 0xc), get_u16(baseadr() + 0x14) / 0x10u
+        get_u32(baseadr() + 0x18), get_width() * get_height(), get_u16(baseadr() + 0x14) / 0x10u
     };
 }
 
@@ -35,10 +35,19 @@ auto BackgroundView::get_width() const -> unsigned { return get_u16(baseadr()); 
 auto BackgroundView::get_height() const -> unsigned { return get_u16(baseadr() + 2); }
 
 auto BackgroundView::get_png() const -> std::pair<std::unique_ptr<const char[]>, const long> {
-    return png::from_4bpp_tiled_image(
-        lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), get_paletteview(),
-        get_tilemapview()
-    );
+    // The tilesets of backgrounds 0-32 are already assembled as tiled_image as-is, so they can just be passed
+    // as such
+    if (index <= 32) {
+        return png::from_4bpp_tiled_image(
+            lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), get_paletteview(),
+            get_tilemapview()
+        );
+    } else {
+        return png::from_4bpp_tiled_image(
+            get_tilemapview().assemble_4bpp_tiled_image(get_tilesetview()).data(), get_width(), get_height(),
+            get_paletteview(), get_tilemapview()
+        );
+    }
 }
 
 auto BackgroundView::get_png_gray(bool inversed) const

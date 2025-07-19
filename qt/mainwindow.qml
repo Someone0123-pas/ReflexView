@@ -71,7 +71,7 @@ ApplicationWindow {
             visible: menuestate.state === "BACKGROUNDS"
             spacing: 30
 
-            readonly property int num_backgrounds: 0x1f
+            readonly property int num_backgrounds: 0x24
             property int pictureindex: 0
 
             RowLayout {
@@ -115,6 +115,7 @@ ApplicationWindow {
                     }
                 }
             }
+            // TODO: Enable scrolling, if height is too big
             Image {
                 id: mainimg
                 Layout.fillWidth: true

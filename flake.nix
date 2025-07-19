@@ -22,6 +22,7 @@
       nativeBuildInputs = with pkgs; [
         cmake
         ninja
+        wget
         qt6.wrapQtAppsHook
       ];
 

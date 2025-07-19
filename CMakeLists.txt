@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.19.0)
 project(ReflexView VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,7 +12,7 @@ qt_standard_project_setup(REQUIRES 6.9)
 add_subdirectory(lib/libspng-0.7.4 EXCLUDE_FROM_ALL)
 set_target_properties(spng_static PROPERTIES SKIP_AUTOGEN ON)
 
-add_executable(reflexview
+qt_add_executable(reflexview
     core/main.cpp
     core/byteviewer.cpp
     core/cli.cpp
@@ -79,9 +79,14 @@ set_target_properties(reflexview PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-include(GNUInstallDirs)
 install(TARGETS reflexview
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+#qt_generate_deploy_qml_app_script(
+    #TARGET reflexview
+    #OUTPUT_SCRIPT deploy_script
+#)
+#install(SCRIPT ${deploy_script})
+include(CPack)
