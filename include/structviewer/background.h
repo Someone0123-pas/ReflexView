@@ -31,22 +31,25 @@ public:
 
     auto get_width() const -> unsigned;
     auto get_height() const -> unsigned;
-    auto get_png() const -> std::pair<std::unique_ptr<const char[]>, const long>;
-    auto get_png_gray(bool inversed) const -> std::pair<std::unique_ptr<const char[]>, const long>;
-    
-    // TODO: dump should only dump the tileset, not the assembled png, this should be in its own function
-    // void dump_assembled_png(const std::string& filename) const;
 
-    /*
-     * Dump fully assembled background as .png, Tilemap as .tilemap and Palette as .agbpal.
-     * The assembled background is equivalent to the tileset for most backgrounds (except the credits).
-     * Filenames always without extension.
-     */ 
-    void dump(const std::string& filename) const;
-    void dump_gray(const std::string& filename, bool inversed) const;
+    auto get_png_assembled() const -> std::pair<std::unique_ptr<const char[]>, const long>;
+    auto get_tileset_png() const -> std::pair<std::unique_ptr<const char[]>, const long>;
+    auto get_tileset_png_gray(bool inversed) const -> std::pair<std::unique_ptr<const char[]>, const long>;
 
     // Dump tileset as .4bpp
     void dump_tileset_4bpp(const std::string& filename) const;
+
+    /*
+     * Dump tileset as .png, Tilemap as .tilemap and Palette as .agbpal.
+     * The assembled background is equivalent to the tileset for most backgrounds (except the credits).
+     * Filenames always without extension.
+     */ 
+    void dump_all(const std::string& filename) const;
+
+    void dump_gray(const std::string& filename, bool inversed) const;
+
+    void dump_assembled(const std::string& filename) const;
+
 };
 
 #endif  // BACKGROUND_H

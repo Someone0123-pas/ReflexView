@@ -4,12 +4,14 @@
 
 #include <bit>
 #include <cassert>
+#include <cmath>
 #include <concepts>
 #include <cstring>
 #include <memory>
 #include <utility>
 #include <vector>
 
+#include "algorithms/lzss.h"
 #include "structviewer/palette.h"
 #include "structviewer/tilemap.h"
 #include "ui.h"
@@ -123,7 +125,7 @@ auto png::from_4bpp_tiled_image(
 
     spng_ihdr ihdr {
         .width = tilewidth * TILE_PIXELWIDTH,
-        .height = tileheight * TILE_PIXELWIDTH,
+        .height = tileheight * TILE_PIXELHEIGHT,
         .bit_depth = 8,
         .color_type = SPNG_COLOR_TYPE_INDEXED,
         .compression_method = 0,
@@ -148,6 +150,68 @@ auto png::from_4bpp_tiled_image(
             return ((static_cast<unsigned char>(tiled_image[srcindex]) >> ((columnbyteindex % 2) * 4)) & 0x0f
                    ) |
                    tilemap.get_tile_palette_shifted(srcindex / (TILE_PIXELHEIGHT * TILE_BYTEWIDTH_4BPP)) << 4;
+        }
+    );
+
+    unsigned long pngsize {};
+    auto pngbuffer {
+        std::unique_ptr<const char[]>(static_cast<const char*>(spng_get_png_buffer(ctx, &pngsize, &status)))
+    };
+    CHECK_STATUS;
+
+    spng_ctx_free(ctx);
+    return {std::move(pngbuffer), pngsize};
+}
+
+auto png::from_tileset(
+    const TilesetView& tileset, unsigned tilewidth, const PaletteView& palette, const TilemapView& tilemap
+) -> std::pair<std::unique_ptr<const char[]>, const long> {
+    const std::vector<u8>& pngpalette {palette.get_spng_plte()};
+    auto [tileset_4bpp, tileset_4bpp_size] {lzss::decompress(tileset)};
+    const unsigned& tileheight {
+        tileset.get_numtiles() / tilewidth + (tileset.get_numtiles() % tilewidth ? 1 : 0)
+    };
+
+    spng_ctx* ctx {spng_ctx_new(SPNG_CTX_ENCODER)};
+    status = spng_set_option(ctx, SPNG_ENCODE_TO_BUFFER, 1);
+    CHECK_STATUS;
+
+    spng_ihdr ihdr {
+        .width = tilewidth * TILE_PIXELWIDTH,
+        .height = tileheight * TILE_PIXELHEIGHT,
+        .bit_depth = 8,
+        .color_type = SPNG_COLOR_TYPE_INDEXED,
+        .compression_method = 0,
+        .filter_method = 0,
+        .interlace_method = 0
+    };
+    status = spng_set_ihdr(ctx, &ihdr);
+    CHECK_STATUS;
+
+    assert(pngpalette.size() / 4 < 256);
+    spng_plte plte {.n_entries = static_cast<uint32_t>(pngpalette.size() / 4), .entries = {}};
+    std::memcpy(static_cast<spng_plte_entry*>(plte.entries), pngpalette.data(), pngpalette.size());
+    status = spng_set_plte(ctx, &plte);
+    CHECK_STATUS;
+
+    encode_png_by_row(
+        ctx, tileheight * TILE_PIXELHEIGHT, tilewidth * TILE_PIXELWIDTH,
+        [&tileset_4bpp, &tileset, &tilewidth,
+         &tilemap](unsigned rowindex, unsigned columnbyteindex) -> unsigned char {
+            unsigned srcindex {translate_to_4bpp_tiled_image_index(
+                rowindex, columnbyteindex / 2, tilewidth * TILE_BYTEWIDTH_4BPP
+            )};
+            if (srcindex >= tileset.get_numtiles() * TILE_BYTES_4BPP) {
+                return 0;
+            }
+            const unsigned& tileindex {srcindex / TILE_BYTES_4BPP};
+            return ((static_cast<unsigned char>(tileset_4bpp[srcindex]) >> ((columnbyteindex % 2) * 4)) & 0x0f
+                   ) |
+                   tilemap.find_palette(tileindex)
+                       .transform([&tilemap](u8 palettenum) -> unsigned char {
+                           return tilemap.shift_palettenum(palettenum) << 4;
+                       })
+                       .value_or(0);
         }
     );
 

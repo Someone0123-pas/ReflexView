@@ -26,11 +26,8 @@ auto from_4bpp_tiled_image_gray(
 auto from_4bpp_tiled_image(const char tiled_image[], unsigned tilewidth, unsigned tileheight, const PaletteView&, const TilemapView&)
     -> std::pair<std::unique_ptr<const char[]>, const long>;
 
-// TODO: Implement
-/*
-auto from_tileset(const TilesetView&, unsigned tilewidth, unsigned tileheight, const PaletteView&, const TilemapView&)
+auto from_tileset(const TilesetView&, unsigned tilewidth, const PaletteView&, const TilemapView&)
     -> std::pair<std::unique_ptr<const char[]>, const long>;
-*/
 
 }  // namespace png
 

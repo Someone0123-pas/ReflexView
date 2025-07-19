@@ -35,7 +35,7 @@ auto ImageProvider::requestImage(const QString& id, QSize* size, const QSize& re
         delimiterindex != -1 && id.startsWith("background")) {
         try {
             const BackgroundView background {id.sliced(delimiterindex + 1).toUInt()};
-            images.try_emplace(id, background.get_png());
+            images.try_emplace(id, background.get_png_assembled());
         } catch (std::runtime_error& e) {
             emit errorhandler->error(e.what());
             return {};

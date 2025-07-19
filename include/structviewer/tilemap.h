@@ -1,6 +1,7 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
+#include <optional>
 #include <vector>
 
 #include "byteviewer.h"
@@ -31,11 +32,15 @@ public:
      */
     auto get_tile_palette_shifted(unsigned mapentryindex) const -> u8;
 
-    // TODO: Implement
+    /*
+     * This takes some palette number and shifts it accordingly.
+     */
+    auto shift_palettenum(u8 palettenum) const -> u8;
+
     /*
      * Returns the palette for this tile that was first found among the mapentries
      */
-    // auto find_palette(unsigned tileindex) const -> u8;
+    auto find_palette(unsigned tileindex) const -> const std::optional<u8>;
 };
 
 #endif  // TILEMAP_H

@@ -17,7 +17,7 @@ const unsigned BackgroundView::max_index {0x23};
 auto BackgroundView::baseadr() const -> logical_offset { return get_u32(ROM_gBACKGROUNDS + index * 4); }
 
 auto BackgroundView::get_tilesetview() const -> const TilesetView {
-    return TilesetView {get_u32(baseadr() + 8)};
+    return TilesetView {get_u32(baseadr() + 8), get_u32(baseadr() + 12)};
 }
 auto BackgroundView::get_paletteview() const -> const PaletteView {
     return PaletteView {
@@ -34,7 +34,7 @@ auto BackgroundView::get_tilemapview() const -> const TilemapView {
 auto BackgroundView::get_width() const -> unsigned { return get_u16(baseadr()); }
 auto BackgroundView::get_height() const -> unsigned { return get_u16(baseadr() + 2); }
 
-auto BackgroundView::get_png() const -> std::pair<std::unique_ptr<const char[]>, const long> {
+auto BackgroundView::get_png_assembled() const -> std::pair<std::unique_ptr<const char[]>, const long> {
     // The tilesets of backgrounds 0-32 are already assembled as tiled_image as-is, so they can just be passed
     // as such
     if (index <= 32) {
@@ -42,15 +42,24 @@ auto BackgroundView::get_png() const -> std::pair<std::unique_ptr<const char[]>,
             lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), get_paletteview(),
             get_tilemapview()
         );
-    } else {
-        return png::from_4bpp_tiled_image(
-            get_tilemapview().assemble_4bpp_tiled_image(get_tilesetview()).data(), get_width(), get_height(),
-            get_paletteview(), get_tilemapview()
-        );
     }
+    return png::from_4bpp_tiled_image(
+        get_tilemapview().assemble_4bpp_tiled_image(get_tilesetview()).data(), get_width(), get_height(),
+        get_paletteview(), get_tilemapview()
+    );
 }
 
-auto BackgroundView::get_png_gray(bool inversed) const
+auto BackgroundView::get_tileset_png() const -> std::pair<std::unique_ptr<const char[]>, const long> {
+    if (index <= 31) {
+        return png::from_4bpp_tiled_image(
+            lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), get_paletteview(),
+            get_tilemapview()
+        );
+    }
+    return png::from_tileset(get_tilesetview(), get_width(), get_paletteview(), get_tilemapview());
+}
+
+auto BackgroundView::get_tileset_png_gray(bool inversed) const
     -> std::pair<std::unique_ptr<const char[]>, const long> {
     return png::from_4bpp_tiled_image_gray(
         lzss::decompress(get_tilesetview()).first.get(), get_width(), get_height(), inversed
@@ -62,8 +71,8 @@ void BackgroundView::dump_tileset_4bpp(const std::string& filename) const {
     std::ofstream {filename + ".4bpp", std::ios::binary}.write(tileset.get(), tileset_size);
 }
 
-void BackgroundView::dump(const std::string& filename) const {
-    auto [pngbuffer, pngbuffer_size] {get_png()};
+void BackgroundView::dump_all(const std::string& filename) const {
+    auto [pngbuffer, pngbuffer_size] {get_tileset_png()};
     std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 
     const std::vector<u8>& tilemap {get_tilemapview().get_tilemap()};
@@ -80,6 +89,11 @@ void BackgroundView::dump(const std::string& filename) const {
 }
 
 void BackgroundView::dump_gray(const std::string& filename, bool inversed) const {
-    auto [pngbuffer, pngbuffer_size] {get_png_gray(inversed)};
-    std::ofstream {filename, std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+    auto [pngbuffer, pngbuffer_size] {get_tileset_png_gray(inversed)};
+    std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+}
+
+void BackgroundView::dump_assembled(const std::string& filename) const {
+    auto [pngbuffer, pngbuffer_size] {get_png_assembled()};
+    std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 }

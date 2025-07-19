@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <optional>
 #include <vector>
 
 #include "algorithms/gbapng.h"
@@ -13,6 +14,7 @@
 static constexpr auto get_tileindex {[](const u16& mapentry) -> u16 { return mapentry & 0x3ff; }};
 static constexpr auto is_flipped_horizontally {[](const u16& mapentry) -> bool { return mapentry & 0x400; }};
 static constexpr auto is_flipped_vertically {[](const u16& mapentry) -> bool { return mapentry & 0x800; }};
+static constexpr auto get_palette {[](const u16& mapentry) -> u8 { return mapentry >> 12; }};
 
 auto TilemapView::baseadr() const -> logical_offset { return offset; }
 
@@ -70,4 +72,25 @@ auto TilemapView::get_tile_palette_shifted(unsigned mapentryindex) const -> u8 {
         );
     }
     return palette_unshifted - palette_startnum;
+}
+
+auto TilemapView::shift_palettenum(u8 palettenum) const -> u8 {
+    if (palettenum < palette_startnum) {
+        UI->error(
+            "Not implemented yet: Runtime palettes",
+            "The tilemap references palettes not specified in the same struct. The palette is thus decided "
+            "at runtime, which has not yet been implemented."
+        );
+    }
+    return palettenum - palette_startnum;
+}
+
+auto TilemapView::find_palette(unsigned tileindex) const -> const std::optional<u8> {
+    for (unsigned mapentryindex {}; mapentryindex < numentries; ++mapentryindex) {
+        const u16& mapentry {get_u16(baseadr() + 2 * mapentryindex)};
+        if (get_tileindex(mapentry) == tileindex) {
+            return get_palette(mapentry);
+        }
+    }
+    return {};
 }
