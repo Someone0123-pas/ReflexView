@@ -1,6 +1,7 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
+#include <filesystem>
 #include <string>
 
 #include "byteviewer.h"
@@ -43,13 +44,12 @@ public:
      * Dump tileset as .png, Tilemap as .tilemap and Palette as .agbpal.
      * The assembled background is equivalent to the tileset for most backgrounds (except the credits).
      * Filenames always without extension.
-     */ 
-    void dump_all(const std::string& filename) const;
+     */
+    void dump_all(const std::filesystem::path& dirname) const;
 
     void dump_gray(const std::string& filename, bool inversed) const;
-
+    void dump_agbpal(const std::string& filename) const;
     void dump_assembled(const std::string& filename) const;
-
 };
 
 #endif  // BACKGROUND_H

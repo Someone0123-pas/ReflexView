@@ -51,7 +51,16 @@ void CLI::set_ui(const std::string& filepath) {
 }
 
 namespace arg {
-enum CommandType : u8 { BACKGROUNDS, BACKGROUND_INDEX, BPP4, BPP4_INDEX, BG_ASSEMBLED, BG_ASSEMBLED_INDEX };
+enum CommandType : u8 {
+    BACKGROUNDS,
+    BACKGROUND_INDEX,
+    BPP4,
+    BPP4_INDEX,
+    BG_ASSEMBLED,
+    BG_ASSEMBLED_INDEX,
+    BG_PAL,
+    BG_PAL_INDEX
+};
 struct Command {
     CommandType command {};
     int index {-1};
@@ -66,6 +75,8 @@ static void bpp4();
 static void bpp4(unsigned index);
 static void bg_assembled();
 static void bg_assembled(unsigned index);
+static void bg_pal();
+static void bg_pal(unsigned index);
 }  // namespace arg
 
 void CLI::error(const std::string& errortitle, const std::string& errormessage) const {
@@ -127,6 +138,17 @@ auto CLI::run(int argc, char* argv[]) -> int {
                 } catch (...) { commands.emplace_back(arg::BG_ASSEMBLED); }
         }
 
+        else if (*argitr == "-bp") {
+            if (argitr + 1 == args.end()) {
+                commands.emplace_back(arg::BG_PAL);
+            } else
+                try {
+                    int index {std::stoi(*(argitr + 1))};
+                    commands.emplace_back(arg::BG_PAL_INDEX, index);
+                    ++argitr;
+                } catch (...) { commands.emplace_back(arg::BG_PAL); }
+        }
+
         else {
             UI->error("Error: Arguments", "One of the arguments was invalid.");
         }
@@ -159,6 +181,12 @@ auto CLI::run(int argc, char* argv[]) -> int {
             case arg::BG_ASSEMBLED_INDEX:
                 arg::bg_assembled(cmd.index);
                 break;
+            case arg::BG_PAL:
+                arg::bg_pal();
+                break;
+            case arg::BG_PAL_INDEX:
+                arg::bg_pal(cmd.index);
+                break;
             default:
                 assert(false);
         }
@@ -179,11 +207,13 @@ static void arg::help() {
     );
     std::println(
         "   -b [INDEX]\t\t\t dump background tileset as coloured, indexed PNG with INDEX (0-35 or all, if "
-        "not "
-        "specified),\n\t\t\t\t\t palette as .agbpal and tilemap as .tilemap"
+        "not specified),\n\t\t\t\t\t tilemap as .bin and palette as well as struct information in a header.c"
     );
     std::println(
         "   -ba [INDEX]\t\t\t dump background as assembled PNG with INDEX (0-35 or all, if not specified)"
+    );
+    std::println(
+        "   -bp [INDEX]\t\t\t dump background palette as .agbpal with INDEX (0-35 or all, if not specified)"
     );
     std::println("   -o <DIR>\t\t\t dump all outputs into the specified directory");
 }
@@ -210,4 +240,12 @@ static void arg::bg_assembled() {
 
 static void arg::bg_assembled(unsigned index) {
     BackgroundView {index}.dump_assembled(arg::outputdir / std::format("background-assembled-{:02}", index));
+}
+
+static void arg::bg_pal() {
+    for (unsigned index {}; index <= BackgroundView::max_index; ++index) { bg_pal(index); }
+}
+
+static void arg::bg_pal(unsigned index) {
+    BackgroundView {index}.dump_agbpal(arg::outputdir / std::format("background-{:02}", index));
 }

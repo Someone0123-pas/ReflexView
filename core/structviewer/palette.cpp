@@ -5,6 +5,7 @@
 #include "types.h"
 
 auto PaletteView::baseadr() const -> logical_offset { return offset; }
+auto PaletteView::get_startnum() const -> unsigned { return startnum; }
 
 auto PaletteView::get_agbpal() const -> const std::vector<u8> {
     std::vector<u8> agbpal(size * 2);
@@ -12,8 +13,6 @@ auto PaletteView::get_agbpal() const -> const std::vector<u8> {
     return agbpal;
 }
 
-// Returns a u8 vector that confirms to the specifications of a struct spng_plte_entry array as
-// specified in spng.h
 auto PaletteView::get_spng_plte() const -> const std::vector<u8> {
     std::vector<u8> spng_palette(size * 4);
 
@@ -25,4 +24,32 @@ auto PaletteView::get_spng_plte() const -> const std::vector<u8> {
     }
 
     return spng_palette;
+}
+
+auto PaletteView::pal_to_c() const -> const std::string {
+    std::string result {"const u16 RENAMEPALETTE[] = {"};
+
+    for (unsigned colour_index {}; colour_index < size; ++colour_index) {
+        if (colour_index == 0) {
+            result += "\n    ";
+        }
+        else if (colour_index % 8 == 0) {
+            result += ",\n    ";
+        }
+        else {
+            result += ", ";
+        }
+
+        u16 curcolour {get_u16(baseadr() + colour_index * 2)};
+        result += std::format(
+            "RGB({:2}, {:2}, {:2}) | {:#06x}",
+            curcolour & 0x1f,
+            (curcolour >> 5) & 0x1f,
+            (curcolour >> 10) & 0x1f,
+            curcolour & 0x8000
+        );
+    }
+
+    result += "\n};\n";
+    return result;
 }

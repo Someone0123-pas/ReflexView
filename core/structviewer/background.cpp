@@ -1,7 +1,9 @@
 #include "structviewer/background.h"
 
+#include <filesystem>
 #include <fstream>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -71,26 +73,59 @@ void BackgroundView::dump_tileset_4bpp(const std::string& filename) const {
     std::ofstream {filename + ".4bpp", std::ios::binary}.write(tileset.get(), tileset_size);
 }
 
-void BackgroundView::dump_all(const std::string& filename) const {
+void BackgroundView::dump_all(const std::filesystem::path& dirname) const {
+    std::filesystem::create_directories(dirname);
+
     auto [pngbuffer, pngbuffer_size] {get_tileset_png()};
-    std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+    std::ofstream {dirname / "tileset.png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
 
     const std::vector<u8>& tilemap {get_tilemapview().get_tilemap()};
     const std::vector<char>& tilemap_char {tilemap.begin(), tilemap.end()};
-    std::ofstream {filename + ".tilemap", std::ios::binary}.write(
+    std::ofstream {dirname / "tilemap.bin", std::ios::binary}.write(
         tilemap_char.data(), static_cast<long>(tilemap_char.size())
     );
 
-    const std::vector<u8>& palette {get_paletteview().get_agbpal()};
-    const std::vector<char>& palette_char {palette.begin(), palette.end()};
-    std::ofstream {filename + ".agbpal", std::ios::binary}.write(
-        palette_char.data(), static_cast<long>(palette_char.size())
-    );
+    std::ofstream {dirname / "header.c", std::ios::binary}
+        << "#include \"global.h\"\n#include \"palette.h\"\n#include \"data.h\"\n\n"
+
+        << get_paletteview().pal_to_c()
+
+        << "\nconst u32 RENAMETILESET[] = "
+           "INCBIN_U32(\"graphics/rooms/backgrounds/RENAMEBACKGROUND/tileset.4bpp.lz\");\n"
+           "const u16 RENAMETILEMAP[] = "
+           "INCBIN_U16(\"graphics/rooms/backgrounds/RENAMEBACKGROUND/tilemap.bin\");\n"
+
+           "\nconst struct RoomBackgroundTiles RENAMESTRUCT = {"
+        << std::format(
+               "\n    .width = {},"
+               "\n    .height = {},"
+               "\n    .unk4 = {},"
+               "\n    .unk6 = {},"
+               "\n    .unk7 = {},"
+               "\n    .tileset = RENAMETILESET,"
+               "\n    .tilesetSize = {:#x},"
+               "\n    .palette = RENAMEPALETTE,"
+               "\n    .paletteOffset = {:#x},"
+               "\n    .paletteSize = sizeof(RENAMEPALETTE),"
+               "\n    .tilemap = RENAMETILEMAP,"
+               "\n    .unk1C = {:#x}",
+               get_width(), get_height(), get_u16(baseadr() + 4), get_u8(baseadr() + 6), get_u8(baseadr() + 7),
+               get_u32(baseadr() + 0xc), get_u16(baseadr() + 0x12), get_u32(baseadr() + 0x1c)
+           )
+        << "\n};\n";
 }
 
 void BackgroundView::dump_gray(const std::string& filename, bool inversed) const {
     auto [pngbuffer, pngbuffer_size] {get_tileset_png_gray(inversed)};
     std::ofstream {filename + ".png", std::ios::binary}.write(pngbuffer.get(), pngbuffer_size);
+}
+
+void BackgroundView::dump_agbpal(const std::string& filename) const {
+    const std::vector<u8>& palette {get_paletteview().get_agbpal()};
+    const std::vector<char>& palette_char {palette.begin(), palette.end()};
+    std::ofstream {filename + ".agbpal", std::ios::binary}.write(
+        palette_char.data(), static_cast<long>(palette_char.size())
+    );
 }
 
 void BackgroundView::dump_assembled(const std::string& filename) const {
